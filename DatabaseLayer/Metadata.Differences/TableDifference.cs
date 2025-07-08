@@ -1,5 +1,5 @@
 ﻿using DatabaseLayer.Interfaces;
-using DatabaseLayer.SqlServerProvider.Metadata.StoredProcedures;
+using DatabaseLayer.SqlServerProvider.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Data;
