@@ -5,11 +5,13 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
+using System.Threading;
 
 namespace DatabaseLayer
 {
     internal sealed class ConnectionInfo : IDisposable
     {
+        private static readonly SemaphoreSlim _connectionLimiter = new SemaphoreSlim(10, 10);
         private readonly string mConnectionString;
 
         public Guid ConnectionInfoIdentifier { get; }
@@ -26,8 +28,13 @@ namespace DatabaseLayer
 
         public void Open()
         {
+            // on first creation, try to acquire a slot
             if (this.Connection == null)
             {
+                // non-blocking: if pool is already at 10, throw immediately
+                if (!_connectionLimiter.Wait(0))
+                    throw new InvalidOperationException("Maximum number of open database connections (10) exceeded.");
+
                 this.Log.Debug(string.Format("Creating new connection object with identifier {0}", (object)this.ConnectionInfoIdentifier));
                 this.Connection = new SqlConnection(this.mConnectionString);
             }
@@ -42,11 +49,14 @@ namespace DatabaseLayer
             if (this.Connection == null)
                 return;
             this.Log.Debug(string.Format("Closing and disposing connection with identifier {0}", (object)this.ConnectionInfoIdentifier));
+            // physically dispose the connection...
             ((Component)this.Connection).Dispose();
             this.Connection = (SqlConnection)null;
+            // ...and release our slot back into the pool
+            _connectionLimiter.Release();
         }
 
-        public SqlConnection Connection { get; set; }
+        public SqlConnection Connection { get; private set; }
 
         public SqlTransaction Transaction { get; set; }
 
