@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace DatabaseLayer.SqlServerProvider.Metadata.StoredProcedures
+namespace DatabaseLayer.SqlServerProvider.Metadata
 {
     public class DatabaseColumn : IColumnMetaData
     {
