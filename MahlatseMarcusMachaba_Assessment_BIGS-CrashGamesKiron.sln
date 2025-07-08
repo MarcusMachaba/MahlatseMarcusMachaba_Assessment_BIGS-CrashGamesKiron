@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseLayer.IDB", "Databa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{6BE47B04-BF35-4357-98A7-484E2A8443B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseLayer.Dapper", "Applications\Common\DatabaseLayer.Dapper\DatabaseLayer.Dapper.csproj", "{D57D679B-96C7-4ACE-9C4D-21336361BC02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6BE47B04-BF35-4357-98A7-484E2A8443B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BE47B04-BF35-4357-98A7-484E2A8443B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BE47B04-BF35-4357-98A7-484E2A8443B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D57D679B-96C7-4ACE-9C4D-21336361BC02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D57D679B-96C7-4ACE-9C4D-21336361BC02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D57D679B-96C7-4ACE-9C4D-21336361BC02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D57D679B-96C7-4ACE-9C4D-21336361BC02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 		{1AA9360A-8898-45B4-B365-8432987A3E42} = {92117717-64F5-40FA-B867-0DC0B8A7B287}
 		{027A3689-FF02-44EA-83BB-A00FA3E310EF} = {1AA9360A-8898-45B4-B365-8432987A3E42}
 		{6BE47B04-BF35-4357-98A7-484E2A8443B3} = {1AA9360A-8898-45B4-B365-8432987A3E42}
+		{D57D679B-96C7-4ACE-9C4D-21336361BC02} = {1AA9360A-8898-45B4-B365-8432987A3E42}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F86174BA-35AC-4607-AB9B-D489EE3F2E68}
