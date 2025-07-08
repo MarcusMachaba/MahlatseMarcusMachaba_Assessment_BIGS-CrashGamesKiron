@@ -32,6 +32,5 @@ namespace DatabaseLayer.Dapper
         Task<T> GetLatestAsync<T>(string propName, object value, bool includeArchived) where T : class, IHasIdSafeRecord;
         Task<T> GetLatestAsyncLong<T>(string propName, object value, bool includeArchived) where T : class, IHasId;
         Task<T> GetLatestRecordAsync<T>() where T : class, IHasIdOnly;
-
     }
 }
