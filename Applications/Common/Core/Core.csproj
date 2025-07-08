@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <Company>MarcusMachaba</Company>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Domain Model Base</Description>
+    <Copyright>MarcusMachaba 2025</Copyright>
+    <Version>1.0.0</Version>
+    <Authors>Marcus Machaba</Authors>
+    <PackageReleaseNotes>Initial  DomainModels release</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>
