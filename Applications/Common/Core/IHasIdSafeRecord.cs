@@ -50,4 +50,3 @@ namespace Core
         public Guid UpdatedById { get; set; }
     }
 }
-}
