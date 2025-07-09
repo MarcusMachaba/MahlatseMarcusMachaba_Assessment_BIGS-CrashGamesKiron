@@ -81,33 +81,28 @@ namespace DatabaseLayer
 
         public void EnsureMetadataProcedures()
         {
-            // 1) Find all embedded .sql resources in this assembly
             var asm = Assembly.GetExecutingAssembly();
             var sqlResources = asm.GetManifestResourceNames()
                 .Where(n => n.EndsWith(".sql", StringComparison.OrdinalIgnoreCase));
 
             if (!sqlResources.Any())
-                return; // no scripts to run
+                return; 
 
-            // 2) Prepare our ADO objects
             using var conn = new SqlConnection(this.ConnectionString);
             conn.Open();
             using var cmd = conn.CreateCommand();
 
-            // regex to split on GO lines
             var splitter = new Regex(
                 @"^\s*GO\s*($|\-\-.*$)",
                 RegexOptions.Multiline | RegexOptions.IgnoreCase
             );
 
-            // 3) Load & execute each script
             foreach (var resourceName in sqlResources)
             {
                 using var stream = asm.GetManifestResourceStream(resourceName);
                 using var reader = new StreamReader(stream);
                 var script = reader.ReadToEnd();
 
-                // split into batches and execute
                 foreach (var batch in splitter
                     .Split(script)
                     .Select(b => b.Trim())
