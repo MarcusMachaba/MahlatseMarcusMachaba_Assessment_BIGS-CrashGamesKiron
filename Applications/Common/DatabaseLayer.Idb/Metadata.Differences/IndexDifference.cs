@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
@@ -32,19 +33,26 @@ namespace DatabaseLayer.Metadata.Differences
             return true;
         }
 
-        internal void Deploy(
-          SqlConnection conn,
-          DeploySettings settings,
-          BaseDataProvider baseDataProvider)
+        internal void Deploy(SqlConnection conn, DeploySettings settings, BaseDataProvider baseDataProvider)
         {
+            // 1) Drop existing index if it exists
             if (this.DatabaseIndex != null)
             {
-                using (SqlCommand command = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    ((DbCommand)command).CommandText = "DROP INDEX [" + this.DatabaseIndex.Name + "] ON [dbo].[" + this.DatabaseIndex.TableName + "]";
-                    ((DbCommand)command).ExecuteNonQuery();
+                    cmd.CommandText = "dbo.DropIndexOnTable";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@TableName", this.DatabaseIndex.TableName);
+                    cmd.Parameters.AddWithValue("@IndexName", this.DatabaseIndex.Name);
+                    // optional if we only ever use dbo:
+                    // cmd.Parameters.AddWithValue("@SchemaName", "dbo");
+
+                    ((DbCommand)cmd).ExecuteNonQuery();
                 }
             }
+
+            #region 2 & 3 Inline query approach
+            /*
             using (SqlCommand command = conn.CreateCommand())
             {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -64,6 +72,29 @@ namespace DatabaseLayer.Metadata.Differences
                 stringBuilder.AppendLine("WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]");
                 ((DbCommand)command).CommandText = stringBuilder.ToString();
                 ((DbCommand)command).ExecuteNonQuery();
+            }
+            */
+            #endregion
+
+            // 2) Build comma-delimited column lists
+            var keyCols = string.Join(", ", this.ObjectIndex.Columns.Select(c => $"[{c.columnName}] {(c.ascending ? "ASC" : "DESC")}"));
+            var inclCols = this.ObjectIndex.IncludedColumns.Any()
+                ? string.Join(", ", this.ObjectIndex.IncludedColumns.Select(c => $"[{c}]"))
+                : string.Empty;
+
+            // 3) Call the CREATE-INDEX proc
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "dbo.CreateIndexOnTable";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@TableName", this.ObjectIndex.TableName);
+                cmd.Parameters.AddWithValue("@IndexName", this.ObjectIndex.Name);
+                cmd.Parameters.AddWithValue("@IsUnique", this.ObjectIndex.Unique);
+                cmd.Parameters.AddWithValue("@KeyColumns", keyCols);
+                cmd.Parameters.AddWithValue("@IncludedColumns", inclCols);
+                // cmd.Parameters.AddWithValue("@SchemaName",     "dbo");
+
+                cmd.ExecuteNonQuery();
             }
         }
     }

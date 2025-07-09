@@ -13,6 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SQLConfigs\CreateIndexOnTable.sql" />
+    <None Remove="SQLConfigs\DropIndexOnTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SQLConfigs\CreateIndexOnTable.sql" />
+    <EmbeddedResource Include="SQLConfigs\DropIndexOnTable.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIncludedIndexColumns.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIndexInfo.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIndexColumns.sql" />
