@@ -21,4 +21,8 @@
     <Folder Include="ApplicationModels\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DatabaseLayer.Custom\DatabaseLayer.Custom.csproj" />
+  </ItemGroup>
+
 </Project>
