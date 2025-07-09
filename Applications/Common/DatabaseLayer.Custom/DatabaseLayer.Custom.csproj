@@ -13,32 +13,32 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="SQLConfigs\CheckStoredProcedureExists.sql" />
-    <None Remove="SQLConfigs\CreateIndexOnTable.sql" />
-    <None Remove="SQLConfigs\DropIndexOnTable.sql" />
-    <None Remove="SQLConfigs\ExecuteDynamicSql.sql" />
-    <None Remove="SQLConfigs\GetTablePrimaryKeyColumns.sql" />
+    <None Remove="SQLConfigScripts\CheckStoredProcedureExists.sql" />
+    <None Remove="SQLConfigScripts\CreateIndexOnTable.sql" />
+    <None Remove="SQLConfigScripts\DropIndexOnTable.sql" />
+    <None Remove="SQLConfigScripts\ExecuteDynamicSql.sql" />
+    <None Remove="SQLConfigScripts\GetTablePrimaryKeyColumns.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="SQLConfigs\CheckStoredProcedureExists.sql" />
-    <EmbeddedResource Include="SQLConfigs\CreateIndexOnTable.sql" />
-    <EmbeddedResource Include="SQLConfigs\DropIndexOnTable.sql" />
-    <EmbeddedResource Include="SQLConfigs\ExecuteDynamicSql.sql" />
-    <EmbeddedResource Include="SQLConfigs\GetIncludedIndexColumns.sql" />
-    <EmbeddedResource Include="SQLConfigs\CreateProcedureFromText.sql" />
-    <EmbeddedResource Include="SQLConfigs\DropProcedureIfExists.sql" />
-    <EmbeddedResource Include="SQLConfigs\DropColumnFromTable.sql" />
-    <EmbeddedResource Include="SQLConfigs\AddColumnsToTable.sql" />
-    <EmbeddedResource Include="SQLConfigs\AlterColumnInTable.sql" />
-    <EmbeddedResource Include="SQLConfigs\DropConstraintFromTable.sql" />
-    <EmbeddedResource Include="SQLConfigs\AddForeignKeyToTable.sql" />
-    <EmbeddedResource Include="SQLConfigs\CreateTableWithColumns.sql" />
-    <EmbeddedResource Include="SQLConfigs\GetIndexInfo.sql" />
-    <EmbeddedResource Include="SQLConfigs\GetIndexColumns.sql" />
-    <EmbeddedResource Include="SQLConfigs\GetForeignKeyInfo.sql" />
-    <EmbeddedResource Include="SQLConfigs\GetTableColumns.sql" />
-    <EmbeddedResource Include="SQLConfigs\GetTablePrimaryKeyColumns.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\CheckStoredProcedureExists.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\CreateIndexOnTable.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\DropIndexOnTable.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\ExecuteDynamicSql.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\GetIncludedIndexColumns.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\CreateProcedureFromText.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\DropProcedureIfExists.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\DropColumnFromTable.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\AddColumnsToTable.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\AlterColumnInTable.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\DropConstraintFromTable.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\AddForeignKeyToTable.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\CreateTableWithColumns.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\GetIndexInfo.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\GetIndexColumns.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\GetForeignKeyInfo.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\GetTableColumns.sql" />
+    <EmbeddedResource Include="SQLConfigScripts\GetTablePrimaryKeyColumns.sql" />
   </ItemGroup>
 
   <ItemGroup>
