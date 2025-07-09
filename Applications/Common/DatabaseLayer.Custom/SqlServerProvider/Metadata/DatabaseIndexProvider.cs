@@ -1,7 +1,7 @@
 ﻿using DatabaseLayer.Metadata;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 
 namespace DatabaseLayer.SqlServerProvider.Metadata
 {

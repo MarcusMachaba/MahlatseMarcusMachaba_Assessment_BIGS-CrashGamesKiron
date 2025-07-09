@@ -17,6 +17,7 @@
     <None Remove="SQLConfigs\CreateIndexOnTable.sql" />
     <None Remove="SQLConfigs\DropIndexOnTable.sql" />
     <None Remove="SQLConfigs\ExecuteDynamicSql.sql" />
+    <None Remove="SQLConfigs\GetTablePrimaryKeyColumns.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,11 +37,12 @@
     <EmbeddedResource Include="SQLConfigs\GetIndexInfo.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIndexColumns.sql" />
     <EmbeddedResource Include="SQLConfigs\GetForeignKeyInfo.sql" />
-    <EmbeddedResource Include="SQLConfigs\GetTablePrimaryKeyColumns.sql" />
     <EmbeddedResource Include="SQLConfigs\GetTableColumns.sql" />
+    <EmbeddedResource Include="SQLConfigs\GetTablePrimaryKeyColumns.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
 

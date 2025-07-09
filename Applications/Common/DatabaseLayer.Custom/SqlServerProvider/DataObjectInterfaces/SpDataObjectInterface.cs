@@ -4,7 +4,7 @@ using DatabaseLayer.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;

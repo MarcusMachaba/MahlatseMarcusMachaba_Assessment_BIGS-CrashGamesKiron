@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 
 namespace DatabaseLayer.Metadata.Differences
@@ -115,7 +115,7 @@ namespace DatabaseLayer.Metadata.Differences
         {
             if (this.NewColumns.Count == 0)
                 return;
-            
+
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "dbo.AddColumnsToTable";
@@ -145,7 +145,7 @@ namespace DatabaseLayer.Metadata.Differences
                     ((DbCommand)command).ExecuteNonQuery();
                 }
             }
-            
+
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "dbo.AlterColumnInTable";
@@ -201,20 +201,24 @@ namespace DatabaseLayer.Metadata.Differences
 
         private void ExecuteAddTableQuery(SqlConnection conn, BaseDataProvider provider)
         {
+            var pkName = this.PrimaryKey.ModelValue;
+            var pkColDef = $"[{pkName}] INT NOT NULL IDENTITY(1,1)";
+
+            var allCols = new List<string> { pkColDef };
+            allCols.AddRange(
+                this.NewColumns
+                    .Select(c => this.GetColumnSpec(c, provider))
+            );
+            var colDefs = string.Join(",\r\n", allCols);
+            var pkDef = $"CONSTRAINT [PK_{provider.GetTableName(this.Table.Type)}_{this.PrimaryKey.ModelValue}] "
+                       + $"PRIMARY KEY CLUSTERED ([{this.Table.PrimaryKeyProperty.Name}] ASC) "
+                       + this.Table.TableContract.FileGroup switch
+                       { var fg => $"WITH(PAD_INDEX=OFF,STATISTICS_NORECOMPUTE=OFF,IGNORE_DUP_KEY=OFF,ALLOW_ROW_LOCKS=ON,ALLOW_PAGE_LOCKS=ON) ON [{fg}]" };
+
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "dbo.CreateTableWithColumns";
                 cmd.CommandType = CommandType.StoredProcedure;
-                // build comma-delimited column defs
-                var colDefs = string.Join(",\r\n",
-                    this.NewColumns.Select(c => this.GetColumnSpec(c, provider))
-                );
-                // primary key clause
-                var pkDef = $"CONSTRAINT [PK_{provider.GetTableName(this.Table.Type)}_{this.PrimaryKey.ModelValue}] "
-                        + $"PRIMARY KEY CLUSTERED ([{this.Table.PrimaryKeyProperty.Name}] ASC) "
-                        + this.Table.TableContract.FileGroup switch
-                        { var fg => $"WITH(PAD_INDEX=OFF,STATISTICS_NORECOMPUTE=OFF,IGNORE_DUP_KEY=OFF,ALLOW_ROW_LOCKS=ON,ALLOW_PAGE_LOCKS=ON) ON [{fg}]" };
-
                 cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
                 cmd.Parameters.AddWithValue("@ColumnDefinitions", colDefs);
                 cmd.Parameters.AddWithValue("@PrimaryKeyDefinition", pkDef);
