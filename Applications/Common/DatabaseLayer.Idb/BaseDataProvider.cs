@@ -126,10 +126,12 @@ namespace DatabaseLayer
             }
             foreach (string deploymentScript in deploySettings1.PostDeploymentScripts)
             {
-                using (SqlCommand command = this.GetConnection().Connection.CreateCommand())
+                using (SqlCommand cmd = this.GetConnection().Connection.CreateCommand())
                 {
-                    ((DbCommand)command).CommandText = deploymentScript;
-                    ((DbCommand)command).ExecuteNonQuery();
+                    cmd.CommandText = "dbo.ExecuteDynamicSql";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Sql", deploymentScript);
+                    cmd.ExecuteNonQuery();
                 }
             }
             if (!deploySettings1.IncludeDefaultData)

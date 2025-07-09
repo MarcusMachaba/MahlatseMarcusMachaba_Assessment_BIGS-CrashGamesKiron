@@ -16,12 +16,14 @@
     <None Remove="SQLConfigs\CheckStoredProcedureExists.sql" />
     <None Remove="SQLConfigs\CreateIndexOnTable.sql" />
     <None Remove="SQLConfigs\DropIndexOnTable.sql" />
+    <None Remove="SQLConfigs\ExecuteDynamicSql.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="SQLConfigs\CheckStoredProcedureExists.sql" />
     <EmbeddedResource Include="SQLConfigs\CreateIndexOnTable.sql" />
     <EmbeddedResource Include="SQLConfigs\DropIndexOnTable.sql" />
+    <EmbeddedResource Include="SQLConfigs\ExecuteDynamicSql.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIncludedIndexColumns.sql" />
     <EmbeddedResource Include="SQLConfigs\CreateProcedureFromText.sql" />
     <EmbeddedResource Include="SQLConfigs\DropProcedureIfExists.sql" />

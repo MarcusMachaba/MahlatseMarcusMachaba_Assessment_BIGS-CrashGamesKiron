@@ -57,18 +57,26 @@ namespace DatabaseLayer.SqlServerProvider
           DeploySettings settings,
           BaseDataProvider baseDataProvider)
         {
+
             if (StoredProcedureHelper.StoredProcedureExists(conn, storedProcedure.StoredProcedureName))
             {
-                using (SqlCommand command = conn.CreateCommand())
+                // 1) drop
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    ((DbCommand)command).CommandText = "DROP PROCEDURE [" + storedProcedure.StoredProcedureName + "]";
-                    ((DbCommand)command).ExecuteNonQuery();
+                    cmd.CommandText = "dbo.DropProcedureIfExists";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@ProcedureName", storedProcedure.StoredProcedureName);
+                    cmd.ExecuteNonQuery();
                 }
             }
-            using (SqlCommand command = conn.CreateCommand())
+
+            // 2) create
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = storedProcedure.StoredProcedureCreateText;
-                ((DbCommand)command).ExecuteNonQuery();
+                cmd.CommandText = "dbo.CreateProcedureFromText";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ProcedureCreateText", storedProcedure.StoredProcedureCreateText);
+                cmd.ExecuteNonQuery();
             }
         }
     }
