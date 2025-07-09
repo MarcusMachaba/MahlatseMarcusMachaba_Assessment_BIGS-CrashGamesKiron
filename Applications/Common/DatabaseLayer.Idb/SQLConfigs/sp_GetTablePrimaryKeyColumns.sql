@@ -1,0 +1,20 @@
+﻿IF OBJECT_ID('dbo.sp_GetTablePrimaryKeyColumns', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_GetTablePrimaryKeyColumns;
+GO
+
+CREATE PROCEDURE dbo.sp_GetTablePrimaryKeyColumns (
+    @TableName       NVARCHAR(128)
+)
+AS
+BEGIN
+  SELECT 
+        ccu.TABLE_NAME,
+        ccu.COLUMN_NAME,
+        ccu.CONSTRAINT_NAME
+    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS tc
+    INNER JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE AS ccu 
+    ON tc.CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
+    WHERE tc.TABLE_NAME = @TableName
+      AND ccu.CONSTRAINT_NAME LIKE 'PK_%';
+END
+GO

@@ -13,6 +13,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SQLConfigs\sp_AlterTable_AddColumn.sql" />
+    <None Remove="SQLConfigs\sp_AlterTable_DropColumn.sql" />
+    <None Remove="SQLConfigs\sp_GetForeignKeyInfo.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SQLConfigs\sp_AlterTable_AddColumn.sql" />
+    <EmbeddedResource Include="SQLConfigs\sp_AlterTable_DropColumn.sql" />
+    <EmbeddedResource Include="SQLConfigs\sp_GetForeignKeyInfo.sql" />
+    <EmbeddedResource Include="SQLConfigs\sp_GetTablePrimaryKeyColumns.sql" />
+    <EmbeddedResource Include="SQLConfigs\sp_GetTableColumns.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
 
