@@ -1,11 +1,5 @@
 ﻿using DatabaseLayer.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using Microsoft.Data.SqlClient;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace DatabaseLayer.SqlServerProvider.Metadata
 {
