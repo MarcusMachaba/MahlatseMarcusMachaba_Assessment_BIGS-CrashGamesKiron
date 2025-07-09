@@ -82,36 +82,50 @@ namespace DatabaseLayer
         public void EnsureMetadataProcedures()
         {
             var asm = Assembly.GetExecutingAssembly();
-            var sqlResources = asm.GetManifestResourceNames()
-                .Where(n => n.EndsWith(".sql", StringComparison.OrdinalIgnoreCase));
+            var sqlScripts = asm.GetManifestResourceNames()
+                .Where(n => n.EndsWith(".sql", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(n => Path.GetFileName(n));
 
-            if (!sqlResources.Any())
-                return; 
+            if (!sqlScripts.Any())
+                return;
 
             using var conn = new SqlConnection(this.ConnectionString);
             conn.Open();
+
             using var cmd = conn.CreateCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "dbo.ExecuteDynamicSql";
+            cmd.Parameters.Add(new SqlParameter("@Sql", SqlDbType.NVarChar, -1));
 
-            var splitter = new Regex(
-                @"^\s*GO\s*($|\-\-.*$)",
-                RegexOptions.Multiline | RegexOptions.IgnoreCase
-            );
+            var splitter = new Regex(@"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-            foreach (var resourceName in sqlResources)
+            foreach (var resourceName in sqlScripts)
             {
-                using var stream = asm.GetManifestResourceStream(resourceName);
-                using var reader = new StreamReader(stream);
-                var script = reader.ReadToEnd();
+                string script;
+                using (var stream = asm.GetManifestResourceStream(resourceName))
+                using (var reader = new StreamReader(stream))
+                    script = reader.ReadToEnd();
 
                 foreach (var batch in splitter
                     .Split(script)
                     .Select(b => b.Trim())
                     .Where(b => !string.IsNullOrWhiteSpace(b)))
                 {
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = batch;
-                    cmd.Parameters.Clear();
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        cmd.Parameters["@Sql"].Value = batch;
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        // <-- resilience: log and continue
+                        Console.Error.WriteLine(
+                            $"Error executing batch from '{resourceName}':\n" +
+                            $"{batch.Substring(0, Math.Min(100, batch.Length)).Replace("\r\n", " ")}...\n" +
+                            $"Exception: {ex.Message}"
+                        );
+                        // you could also collect these in a List<Exception> and throw an AggregateException later
+                    }
                 }
             }
         }

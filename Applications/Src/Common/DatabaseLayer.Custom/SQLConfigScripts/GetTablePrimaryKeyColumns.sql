@@ -3,8 +3,7 @@
 GO
 
 CREATE PROCEDURE dbo.GetTablePrimaryKeyColumns 
-    @TableName       SYSNAME                                        -- SYSNAME is aliased to NVARCHAR(128)     
-
+    @TableName  SYSNAME                                             -- SYSNAME is aliased to NVARCHAR(128)     
 AS
 BEGIN
   SET NOCOUNT ON;                                                   -- prevent the “(1 row(s) affected)” messages             
@@ -17,6 +16,6 @@ BEGIN
     INNER JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE AS ccu 
     ON tc.CONSTRAINT_NAME = ccu.CONSTRAINT_NAME
     WHERE tc.TABLE_NAME = @TableName
-      AND ccu.CONSTRAINT_NAME LIKE 'PK_%';
+        AND ccu.CONSTRAINT_NAME LIKE 'PK_%';
 END
 GO
