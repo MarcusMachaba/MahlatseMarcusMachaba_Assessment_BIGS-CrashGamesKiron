@@ -17,7 +17,7 @@ namespace DatabaseLayer.SqlServerProvider.Metadata
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = "dbo.sp_GetTablePrimaryKeyColumns";
+                cmd.CommandText = "dbo.GetTablePrimaryKeyColumns";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@TableName", tableName);
 
@@ -32,7 +32,7 @@ namespace DatabaseLayer.SqlServerProvider.Metadata
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = "sp_GetTableColumns";
+                cmd.CommandText = "dbo.GetTableColumns";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@TableName", tableName);
 
@@ -56,7 +56,7 @@ namespace DatabaseLayer.SqlServerProvider.Metadata
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = "dbo.sp_GetForeignKeyInfo";
+                cmd.CommandText = "dbo.GetForeignKeyInfo";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@TableName", tableName);
 
