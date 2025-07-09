@@ -135,7 +135,7 @@ namespace DatabaseLayer
             }
         }
 
-        public void CreateKeySP()
+        private void CreateKeySP()
         {
             using var conn = new SqlConnection(this.ConnectionString);
             conn.Open();
