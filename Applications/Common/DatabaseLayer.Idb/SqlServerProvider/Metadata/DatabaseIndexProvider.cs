@@ -60,6 +60,7 @@ namespace DatabaseLayer.SqlServerProvider.Metadata
                         index.AddIncludedColumns(reader["Column"] as string);
                 }
             }
+
             return index;
         }
     }
