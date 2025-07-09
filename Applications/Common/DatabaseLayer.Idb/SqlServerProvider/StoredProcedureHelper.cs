@@ -37,11 +37,13 @@ namespace DatabaseLayer.SqlServerProvider
 
         private static bool StoredProcedureExists(SqlConnection conn, string storedProcedureName)
         {
-            using (SqlCommand command = conn.CreateCommand())
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = "SELECT COUNT(1) FROM sys.objects WHERE object_id = OBJECT_ID(@ObjectName) AND type in (N'P', N'PC')";
-                command.Parameters.AddWithValue("@ObjectName", (object)("[dbo].[" + storedProcedureName + "]"));
-                return ((DbCommand)command).ExecuteScalar() is int num && num > 0;
+                cmd.CommandText = "dbo.CheckStoredProcedureExists";
+                cmd.CommandType = CommandType.StoredProcedure;
+                // pass the same “[dbo].[ProcName]” string we were building inline
+                cmd.Parameters.AddWithValue("@ObjectName", (object)("[dbo].[" + storedProcedureName + "]"));
+                return cmd.ExecuteScalar() is int num && num > 0;
             }
         }
 

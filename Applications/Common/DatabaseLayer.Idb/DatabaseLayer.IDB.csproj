@@ -13,11 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SQLConfigs\CheckStoredProcedureExists.sql" />
     <None Remove="SQLConfigs\CreateIndexOnTable.sql" />
     <None Remove="SQLConfigs\DropIndexOnTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="SQLConfigs\CheckStoredProcedureExists.sql" />
     <EmbeddedResource Include="SQLConfigs\CreateIndexOnTable.sql" />
     <EmbeddedResource Include="SQLConfigs\DropIndexOnTable.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIncludedIndexColumns.sql" />
