@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace DatabaseLayer.Metadata.Differences
 {
@@ -70,20 +71,23 @@ namespace DatabaseLayer.Metadata.Differences
 
         private void CreateStoredProcedure(SqlConnection conn, string createQuery)
         {
-            using (SqlCommand command = conn.CreateCommand())
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = createQuery;
-                ((DbCommand)command).ExecuteNonQuery();
+                cmd.CommandText = "dbo.CreateProcedureFromText";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ProcedureCreateText", createQuery);
+                cmd.ExecuteNonQuery();
             }
         }
 
         private void DropStoredProcedure(SqlConnection conn, string storedProcedureName)
         {
-            string str = "IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[" + storedProcedureName + "]') AND type in (N'P', N'PC'))\r\nDROP PROCEDURE[dbo].[" + storedProcedureName + "]";
-            using (SqlCommand command = conn.CreateCommand())
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = str;
-                ((DbCommand)command).ExecuteNonQuery();
+                cmd.CommandText = "dbo.DropProcedureIfExists";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ProcedureName", storedProcedureName);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -95,16 +99,15 @@ namespace DatabaseLayer.Metadata.Differences
                 this.AlterForeignKey(columnDifference, conn, provider);
         }
 
-        private void RemoveAdditionalColumn(
-          DatabaseColumn additionalColumn,
-          SqlConnection conn,
-          BaseDataProvider provider)
+        private void RemoveAdditionalColumn(DatabaseColumn additionalColumn, SqlConnection conn, BaseDataProvider provider)
         {
-            string str = "ALTER TABLE [dbo].[" + provider.GetTableName(this.Table.Type) + "]" + Environment.NewLine + ("DROP COLUMN [" + additionalColumn.Name + "]");
-            using (SqlCommand command = conn.CreateCommand())
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = str;
-                ((DbCommand)command).ExecuteNonQuery();
+                cmd.CommandText = "dbo.DropColumnFromTable";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
+                cmd.Parameters.AddWithValue("@ColumnName", additionalColumn.Name);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -112,21 +115,21 @@ namespace DatabaseLayer.Metadata.Differences
         {
             if (this.NewColumns.Count == 0)
                 return;
-            string str1 = "ALTER TABLE [dbo].[" + provider.GetTableName(this.Table.Type) + "] ADD";
-            foreach (ColumnMetaData newColumn in this.NewColumns)
-                str1 = str1 + Environment.NewLine + (" " + this.GetColumnSpec(newColumn, provider) + ",");
-            string str2 = str1.Substring(0, str1.Length - 1);
-            using (SqlCommand command = conn.CreateCommand())
+            
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = str2;
-                ((DbCommand)command).ExecuteNonQuery();
+                cmd.CommandText = "dbo.AddColumnsToTable";
+                cmd.CommandType = CommandType.StoredProcedure;
+                var defs = string.Join(",\r\n",
+                    this.NewColumns.Select(c => this.GetColumnSpec(c, provider))
+                );
+                cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
+                cmd.Parameters.AddWithValue("@ColumnDefinitions", defs);
+                cmd.ExecuteNonQuery();
             }
         }
 
-        private void AlterColumn(
-          ColumnDifference columnDiff,
-          SqlConnection conn,
-          BaseDataProvider provider)
+        private void AlterColumn(ColumnDifference columnDiff, SqlConnection conn, BaseDataProvider provider)
         {
             if (!columnDiff.ColumnChanged)
                 return;
@@ -142,45 +145,47 @@ namespace DatabaseLayer.Metadata.Differences
                     ((DbCommand)command).ExecuteNonQuery();
                 }
             }
-            string str = "ALTER TABLE [dbo].[" + provider.GetTableName(this.Table.Type) + "]" + Environment.NewLine + ("ALTER COLUMN " + this.GetColumnSpec(columnDiff.ModelColumn, provider));
-            using (SqlCommand command = conn.CreateCommand())
+            
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = str;
-                ((DbCommand)command).ExecuteNonQuery();
+                cmd.CommandText = "dbo.AlterColumnInTable";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
+                cmd.Parameters.AddWithValue("@ColumnDefinition", this.GetColumnSpec(columnDiff.ModelColumn, provider));
+                cmd.ExecuteNonQuery();
             }
         }
 
-        public void AlterForeignKey(
-          ColumnDifference columnDiff,
-          SqlConnection conn,
-          BaseDataProvider provider)
+        public void AlterForeignKey(ColumnDifference columnDiff, SqlConnection conn, BaseDataProvider provider)
         {
             if (!columnDiff.ForeignKeyChanged)
                 return;
             if (columnDiff.DatabaseColumn.ForeignKeyName != null)
             {
-                string str = "ALTER TABLE [dbo].[" + provider.GetTableName(this.Table.Type) + "]" + Environment.NewLine + ("DROP CONSTRAINT " + columnDiff.DatabaseColumn.ForeignKeyName);
-                using (SqlCommand command = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    ((DbCommand)command).CommandText = str;
-                    ((DbCommand)command).ExecuteNonQuery();
+                    cmd.CommandText = "dbo.DropConstraintFromTable";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
+                    cmd.Parameters.AddWithValue("@ConstraintName", columnDiff.DatabaseColumn.ForeignKeyName);
+                    cmd.ExecuteNonQuery();
                 }
             }
             this.AddForeignKey(columnDiff.ModelColumn, conn, provider);
         }
 
-        private void AddForeignKey(
-          ColumnMetaData modelColumn,
-          SqlConnection conn,
-          BaseDataProvider provider)
+        private void AddForeignKey(ColumnMetaData modelColumn, SqlConnection conn, BaseDataProvider provider)
         {
             if (!modelColumn.HasForeignKey)
                 return;
-            string str = "ALTER TABLE [dbo].[" + provider.GetTableName(this.Table.Type) + "]" + Environment.NewLine + ("ADD " + this.GetForeignKey(modelColumn, provider));
-            using (SqlCommand command = conn.CreateCommand())
+
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = str;
-                ((DbCommand)command).ExecuteNonQuery();
+                cmd.CommandText = "dbo.AddForeignKeyToTable";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
+                cmd.Parameters.AddWithValue("@ForeignKeyDefinition", this.GetForeignKey(modelColumn, provider));
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -196,14 +201,25 @@ namespace DatabaseLayer.Metadata.Differences
 
         private void ExecuteAddTableQuery(SqlConnection conn, BaseDataProvider provider)
         {
-            string str1 = "CREATE TABLE [dbo].[" + provider.GetTableName(this.Table.Type) + "]" + Environment.NewLine + "(" + Environment.NewLine + ("\t" + this.PrimaryKey.ModelValue + " INT NOT NULL IDENTITY(1,1),");
-            foreach (ColumnMetaData newColumn in this.NewColumns)
-                str1 = str1 + Environment.NewLine + "\t" + this.GetColumnSpec(newColumn, provider) + ",";
-            string str2 = str1 + ("CONSTRAINT [PK_" + provider.GetTableName(this.Table.Type) + "_" + this.PrimaryKey.ModelValue + "] PRIMARY KEY CLUSTERED ( [" + this.Table.PrimaryKeyProperty.Name + "] ASC )WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [" + this.Table.TableContract.FileGroup + "]") + Environment.NewLine + (") ON [" + this.Table.TableContract.FileGroup + "]");
-            using (SqlCommand command = conn.CreateCommand())
+            using (SqlCommand cmd = conn.CreateCommand())
             {
-                ((DbCommand)command).CommandText = str2;
-                ((DbCommand)command).ExecuteNonQuery();
+                cmd.CommandText = "dbo.CreateTableWithColumns";
+                cmd.CommandType = CommandType.StoredProcedure;
+                // build comma-delimited column defs
+                var colDefs = string.Join(",\r\n",
+                    this.NewColumns.Select(c => this.GetColumnSpec(c, provider))
+                );
+                // primary key clause
+                var pkDef = $"CONSTRAINT [PK_{provider.GetTableName(this.Table.Type)}_{this.PrimaryKey.ModelValue}] "
+                        + $"PRIMARY KEY CLUSTERED ([{this.Table.PrimaryKeyProperty.Name}] ASC) "
+                        + this.Table.TableContract.FileGroup switch
+                        { var fg => $"WITH(PAD_INDEX=OFF,STATISTICS_NORECOMPUTE=OFF,IGNORE_DUP_KEY=OFF,ALLOW_ROW_LOCKS=ON,ALLOW_PAGE_LOCKS=ON) ON [{fg}]" };
+
+                cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
+                cmd.Parameters.AddWithValue("@ColumnDefinitions", colDefs);
+                cmd.Parameters.AddWithValue("@PrimaryKeyDefinition", pkDef);
+                cmd.Parameters.AddWithValue("@FileGroup", this.Table.TableContract.FileGroup);
+                cmd.ExecuteNonQuery();
             }
         }
 

@@ -21,6 +21,14 @@
     <EmbeddedResource Include="SQLConfigs\CreateIndexOnTable.sql" />
     <EmbeddedResource Include="SQLConfigs\DropIndexOnTable.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIncludedIndexColumns.sql" />
+    <EmbeddedResource Include="SQLConfigs\CreateProcedureFromText.sql" />
+    <EmbeddedResource Include="SQLConfigs\DropProcedureIfExists.sql" />
+    <EmbeddedResource Include="SQLConfigs\DropColumnFromTable.sql" />
+    <EmbeddedResource Include="SQLConfigs\AddColumnsToTable.sql" />
+    <EmbeddedResource Include="SQLConfigs\AlterColumnInTable.sql" />
+    <EmbeddedResource Include="SQLConfigs\DropConstraintFromTable.sql" />
+    <EmbeddedResource Include="SQLConfigs\AddForeignKeyToTable.sql" />
+    <EmbeddedResource Include="SQLConfigs\CreateTableWithColumns.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIndexInfo.sql" />
     <EmbeddedResource Include="SQLConfigs\GetIndexColumns.sql" />
     <EmbeddedResource Include="SQLConfigs\GetForeignKeyInfo.sql" />
