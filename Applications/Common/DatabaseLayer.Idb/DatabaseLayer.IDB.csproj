@@ -13,12 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="SQLConfigs\sp_AlterTable_DropColumn.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="SQLConfigs\sp_GetIndexInfo.sql" />
-    <EmbeddedResource Include="SQLConfigs\sp_AlterTable_DropColumn.sql" />
+    <EmbeddedResource Include="SQLConfigs\GetIncludedIndexColumns.sql" />
+    <EmbeddedResource Include="SQLConfigs\GetIndexInfo.sql" />
+    <EmbeddedResource Include="SQLConfigs\GetIndexColumns.sql" />
     <EmbeddedResource Include="SQLConfigs\GetForeignKeyInfo.sql" />
     <EmbeddedResource Include="SQLConfigs\GetTablePrimaryKeyColumns.sql" />
     <EmbeddedResource Include="SQLConfigs\GetTableColumns.sql" />
