@@ -51,31 +51,6 @@ namespace DatabaseLayer.Metadata.Differences
                 }
             }
 
-            #region 2 & 3 Inline query approach
-            /*
-            using (SqlCommand command = conn.CreateCommand())
-            {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine("CREATE " + (this.ObjectIndex.Unique ? "UNIQUE " : "") + "NONCLUSTERED INDEX[" + this.ObjectIndex.Name + "] ON[dbo].[" + this.ObjectIndex.TableName + "]");
-                stringBuilder.AppendLine("(");
-                for (int index = 0; index < this.ObjectIndex.Columns.Count; ++index)
-                    stringBuilder.AppendLine("   " + this.ObjectIndex.Columns[index].columnName + " " + (this.ObjectIndex.Columns[index].ascending ? "ASC" : "DESC") + (index == this.ObjectIndex.Columns.Count - 1 ? "" : ","));
-                stringBuilder.AppendLine(")");
-                if (this.ObjectIndex.IncludedColumns.Count > 0)
-                {
-                    stringBuilder.AppendLine("INCLUDE");
-                    stringBuilder.AppendLine("(");
-                    for (int index = 0; index < this.ObjectIndex.IncludedColumns.Count; ++index)
-                        stringBuilder.AppendLine("   " + this.ObjectIndex.IncludedColumns[index] + " " + (index == this.ObjectIndex.IncludedColumns.Count - 1 ? "" : ","));
-                    stringBuilder.AppendLine(")");
-                }
-                stringBuilder.AppendLine("WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]");
-                ((DbCommand)command).CommandText = stringBuilder.ToString();
-                ((DbCommand)command).ExecuteNonQuery();
-            }
-            */
-            #endregion
-
             // 2) Build comma-delimited column lists
             var keyCols = string.Join(", ", this.ObjectIndex.Columns.Select(c => $"[{c.columnName}] {(c.ascending ? "ASC" : "DESC")}"));
             var inclCols = this.ObjectIndex.IncludedColumns.Any()
