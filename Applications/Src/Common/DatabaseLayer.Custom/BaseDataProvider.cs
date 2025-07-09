@@ -81,10 +81,17 @@ namespace DatabaseLayer
 
         public void EnsureMetadataProcedures()
         {
+            this.CreateKeySP();
             var asm = Assembly.GetExecutingAssembly();
-            var sqlScripts = asm.GetManifestResourceNames()
-                .Where(n => n.EndsWith(".sql", StringComparison.OrdinalIgnoreCase))
-                .OrderBy(n => Path.GetFileName(n));
+            var allSql = asm.GetManifestResourceNames()
+                .Where(n => n.EndsWith(".sql", StringComparison.OrdinalIgnoreCase));
+            var skipOne = allSql
+                .FirstOrDefault(n => Path.GetFileName(n)
+                .Contains("CreateProcedureFromText.sql"));
+            var sqlScripts = skipOne == null
+                ? allSql.OrderBy(n => Path.GetFileName(n))
+                : allSql.Except(new[] { skipOne })
+                        .OrderBy(n => Path.GetFileName(n));
 
             if (!sqlScripts.Any())
                 return;
@@ -94,8 +101,8 @@ namespace DatabaseLayer
 
             using var cmd = conn.CreateCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "dbo.ExecuteDynamicSql";
-            cmd.Parameters.Add(new SqlParameter("@Sql", SqlDbType.NVarChar, -1));
+            cmd.CommandText = "dbo.CreateProcedureFromText";
+            cmd.Parameters.Add(new SqlParameter("@ProcedureCreateText", SqlDbType.NVarChar, -1));
 
             var splitter = new Regex(@"^\s*GO\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
@@ -113,21 +120,49 @@ namespace DatabaseLayer
                 {
                     try
                     {
-                        cmd.Parameters["@Sql"].Value = batch;
+                        cmd.Parameters["@ProcedureCreateText"].Value = batch;
                         cmd.ExecuteNonQuery();
                     }
                     catch (Exception ex)
                     {
-                        // <-- resilience: log and continue
                         Console.Error.WriteLine(
                             $"Error executing batch from '{resourceName}':\n" +
                             $"{batch.Substring(0, Math.Min(100, batch.Length)).Replace("\r\n", " ")}...\n" +
                             $"Exception: {ex.Message}"
                         );
-                        // you could also collect these in a List<Exception> and throw an AggregateException later
                     }
                 }
             }
+        }
+
+        public void CreateKeySP()
+        {
+            using var conn = new SqlConnection(this.ConnectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "sp_executesql";
+
+            var masterSql = @"
+                            IF OBJECT_ID('dbo.CreateProcedureFromText','P') IS NOT NULL
+                                DROP PROCEDURE dbo.CreateProcedureFromText;
+
+                            EXEC(N'
+                            CREATE PROCEDURE dbo.CreateProcedureFromText
+                                @ProcedureCreateText NVARCHAR(MAX)
+                            AS
+                            BEGIN
+                                SET NOCOUNT ON;
+                                EXEC sp_executesql @ProcedureCreateText;
+                            END
+                            ');
+                            ";
+
+            cmd.Parameters.Add(new SqlParameter("@stmt", SqlDbType.NVarChar, -1) { Value = masterSql });
+            cmd.Parameters.Add(new SqlParameter("@params", SqlDbType.NVarChar, 0) { Value = "" });
+
+            cmd.ExecuteNonQuery();
         }
 
         public void StartTransaction() => this.GetConnection().StartTransaction();
