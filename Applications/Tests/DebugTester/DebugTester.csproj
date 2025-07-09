@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Core\Core.csproj" />
-    <ProjectReference Include="..\Common\DatabaseLayer.Custom\DatabaseLayer.Custom.csproj" />
+    <ProjectReference Include="..\..\Common\Core\Core.csproj" />
+    <ProjectReference Include="..\..\Common\DatabaseLayer.Custom\DatabaseLayer.Custom.csproj" />
   </ItemGroup>
 
 </Project>
