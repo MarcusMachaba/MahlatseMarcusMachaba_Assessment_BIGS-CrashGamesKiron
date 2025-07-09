@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Applications\Common
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseLayer.Custom", "Applications\Common\DatabaseLayer.Custom\DatabaseLayer.Custom.csproj", "{0F6F7F4D-130B-569D-B9ED-1FAEB81D04AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugTester", "Applications\DebugTester\DebugTester.csproj", "{3F57E97C-F085-9DFB-327D-2559E82AB366}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{0F6F7F4D-130B-569D-B9ED-1FAEB81D04AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F6F7F4D-130B-569D-B9ED-1FAEB81D04AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F6F7F4D-130B-569D-B9ED-1FAEB81D04AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F57E97C-F085-9DFB-327D-2559E82AB366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F57E97C-F085-9DFB-327D-2559E82AB366}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F57E97C-F085-9DFB-327D-2559E82AB366}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F57E97C-F085-9DFB-327D-2559E82AB366}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{2BA63A8B-00A2-34C1-9B58-7C81FCD1F40E} = {1AA9360A-8898-45B4-B365-8432987A3E42}
 		{C3859CE7-7352-4907-A2C6-9E5B2680D064} = {1AA9360A-8898-45B4-B365-8432987A3E42}
 		{0F6F7F4D-130B-569D-B9ED-1FAEB81D04AB} = {1AA9360A-8898-45B4-B365-8432987A3E42}
+		{3F57E97C-F085-9DFB-327D-2559E82AB366} = {92117717-64F5-40FA-B867-0DC0B8A7B287}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F86174BA-35AC-4607-AB9B-D489EE3F2E68}
