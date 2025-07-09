@@ -13,6 +13,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>DatabaseLayer.Custom.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="SQLConfigScripts\CheckStoredProcedureExists.sql" />
     <None Remove="SQLConfigScripts\CreateIndexOnTable.sql" />
     <None Remove="SQLConfigScripts\DropIndexOnTable.sql" />
