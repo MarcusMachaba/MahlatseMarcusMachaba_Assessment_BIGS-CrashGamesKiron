@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugTester", "Applications
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CachingLayer", "Applications\Common\CachingLayer\CachingLayer.csproj", "{C14168B0-7EE8-415B-BA7D-9B2061D0AFA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KironTest.API", "Applications\Src\KironTest.API\KironTest.API.csproj", "{B8307525-5CFC-4763-8343-B7684D64D4FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{C14168B0-7EE8-415B-BA7D-9B2061D0AFA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C14168B0-7EE8-415B-BA7D-9B2061D0AFA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C14168B0-7EE8-415B-BA7D-9B2061D0AFA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8307525-5CFC-4763-8343-B7684D64D4FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8307525-5CFC-4763-8343-B7684D64D4FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8307525-5CFC-4763-8343-B7684D64D4FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8307525-5CFC-4763-8343-B7684D64D4FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{EEC81FDE-A5D1-DAE1-5993-98366D9421DF} = {CDD25D0C-B11E-4D3E-89B4-23EBE81C04AF}
 		{22FE1C7C-B145-2396-F69C-28F26D13D49B} = {CDD25D0C-B11E-4D3E-89B4-23EBE81C04AF}
 		{C14168B0-7EE8-415B-BA7D-9B2061D0AFA1} = {1AA9360A-8898-45B4-B365-8432987A3E42}
+		{B8307525-5CFC-4763-8343-B7684D64D4FD} = {92117717-64F5-40FA-B867-0DC0B8A7B287}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F86174BA-35AC-4607-AB9B-D489EE3F2E68}
