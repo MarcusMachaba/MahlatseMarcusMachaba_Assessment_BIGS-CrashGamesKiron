@@ -3,9 +3,9 @@
 GO
 
 CREATE PROCEDURE dbo.AlterColumnInTable
-    @SchemaName       SYSNAME       = N'dbo',           -- e.g. dbo
-    @TableName        SYSNAME,                         -- e.g. MyTable
-    @ColumnDefinition NVARCHAR(MAX)  = NULL            -- e.g. "[Col] NVARCHAR(50) NULL DEFAULT('X')"
+    @SchemaName       SYSNAME       = N'dbo',           
+    @TableName        SYSNAME,                         
+    @ColumnDefinition NVARCHAR(MAX)  = NULL            
 AS
 BEGIN
     SET NOCOUNT ON;
