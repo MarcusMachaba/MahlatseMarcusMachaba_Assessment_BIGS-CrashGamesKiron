@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace DebugTester.DataAccessLayer.Tests.Models
 {
-    [TableContract(PrimaryKey = nameof(Logs.Id))]
+    [TableContract(PrimaryKey = nameof(Logs2.Id))]
     public class Logs2 : HasIdOnly
     {
         [DataMember, ColumnContract] public string Message { get; set; }

@@ -1,16 +1,15 @@
-﻿using DatabaseLayer.Attributes;
+﻿using Core;
+using DatabaseLayer.Attributes;
 
 namespace DebugTester.DataAccessLayer.Tests.Models
 {
-    [TableContract(PrimaryKey = nameof(Bank.IdBank))]
-    public class Bank
+    [TableContract(PrimaryKey = nameof(Bank.Id))]
+    public class Bank: HasIdOnly
     {
-        [ColumnContract]
-        public int IdBank { get; set; }
         [ColumnContract(Length = 100)]
         public string Name { get; set; }
 
-        [ColumnContract(Length = 100)]
+        [ColumnContract(Length = 1050)]
         public string SecondName { get; set; }
     }
 }

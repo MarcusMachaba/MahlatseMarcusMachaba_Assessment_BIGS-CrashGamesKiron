@@ -25,6 +25,37 @@ namespace DebugTester.DataAccessLayer.Tests
             {
                 //applies db-schema changes if models have been modified
                 var result = dp.CompareModelToDatabase();
+                if (result.TableDifferences.Count > 0)
+                {
+                    Console.WriteLine("=== Tables out of sync ===");
+                    foreach (var td in result.TableDifferences)
+                    {
+                        Console.WriteLine($"Table {td.Table.Type.UnderlyingSystemType.Name}:");
+                        Console.WriteLine($"Table {td.Table.TableContract.PrimaryKey}:");
+
+
+                        if (td.PrimaryKey != null)
+                            Console.WriteLine($"  PK mismatch: model={td.Table.Type.Name} db={td.PrimaryKey.DbValue} primaryKey={td.Table.TableContract.PrimaryKey}") ;
+
+                        foreach (var col in td.NewColumns)
+                            Console.WriteLine($"  Missing column  : {col.Name}");
+
+                        foreach (var col in td.AdditionalColumns)
+                            Console.WriteLine($"  Extra column    : {col.Name}");
+
+                        foreach (var diff in td.ColumnDifferences)
+                        {
+                            Console.WriteLine(
+                              $"  Column {diff.ModelColumn.Name}: " +
+                              $"Type(db={diff.DatabaseColumn.DataType.Name},model={diff.ModelColumn.DataType.Name}), " +
+                              $"Req(db={diff.DatabaseColumn.Required},model={diff.ModelColumn.Required}), " +
+                              $"Len(db={diff.DatabaseColumn.Length},model={diff.ModelColumn.Length}), " +
+                              $"FKChanged={diff.ForeignKeyChanged}"
+                            );
+                        }
+                    }
+                }
+
                 if (result.TableDifferences.Count > 0 || result.StoredProcedureDifferences.Count > 0 || result.IndexDifferences.Count > 0)
                 {
                     dp.Deploy(result);
@@ -57,14 +88,14 @@ namespace DebugTester.DataAccessLayer.Tests
                     // Display the retrieved banks
                     foreach (var bank in banks)
                     {
-                        Console.WriteLine($"Bank ID: {bank.IdBank}, Name: {bank.Name}, Second Name: {bank.SecondName}");
+                        Console.WriteLine($"Bank ID: {bank.Id}, Name: {bank.Name}, Second Name: {bank.SecondName}");
                     }
 
 
                     // Update the first bank's name
                     if (banks.Any())
                     {
-                        var secondBank = banks.FirstOrDefault(x=>x.IdBank > 1);
+                        var secondBank = banks.FirstOrDefault(x=>x.Id > 1);
                         secondBank.Name = "Updated Bank Name";
                         dp.Banks.Update(secondBank);
                     }
@@ -74,7 +105,7 @@ namespace DebugTester.DataAccessLayer.Tests
                     if (banks.Any())
                     {
                         var firstBank = banks.First();
-                        dp.Banks.Delete(firstBank.IdBank);
+                        dp.Banks.Delete((int)firstBank.Id);
                     }
 
 
