@@ -37,7 +37,7 @@ namespace DatabaseLayer
                 case "Int64":
                     return (SqlDbType)0;
                 case "String":
-                    return length != 0 ? (SqlDbType)22 : (SqlDbType)18;
+                    return length != 0 ? (SqlDbType)22 : (SqlDbType)12;
                 case "TimeSpan":
                     return (SqlDbType)32;
                 default:
@@ -70,6 +70,7 @@ namespace DatabaseLayer
                 case "SMALLINT":
                     return typeof(short);
                 case "TEXT":
+                case "NTEXT":
                     return typeof(string);
                 case "TIME":
                     return typeof(TimeSpan);
@@ -80,6 +81,7 @@ namespace DatabaseLayer
                 case "VARBINARY":
                     return typeof(byte[]);
                 case "VARCHAR":
+                case "NVARCHAR":
                     return length != 1 ? typeof(string) : typeof(char);
                 default:
                     throw new ArgumentException("Could not convert sql db type " + type + " to a object type.");
