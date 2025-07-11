@@ -18,7 +18,7 @@ namespace Core
     public class HasIdOnly : IHasIdOnly
     {
         [DataMember, BsonId, ColumnContract]
-        public long Id { get; set; }
+        public virtual long Id { get; set; }
     }
     #endregion
 

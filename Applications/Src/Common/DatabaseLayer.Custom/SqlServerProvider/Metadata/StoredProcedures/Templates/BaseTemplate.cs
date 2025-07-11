@@ -47,13 +47,33 @@ namespace DatabaseLayer.SqlServerProvider.Metadata.StoredProcedures.Templates
         public string GetSqlDataType(ColumnMetaData item)
         {
             if (item.JoinedFrom.Length != 0)
-                item = this.Provider.GetTableSpec(item.JoinedFrom[item.JoinedFrom.Length - 3]).Columns.First<ColumnMetaData>((Func<ColumnMetaData, bool>)(c => c.Name == item.JoinedFrom[item.JoinedFrom.Length - 1]));
+                item = this.Provider
+                           .GetTableSpec(item.JoinedFrom[item.JoinedFrom.Length - 3])
+                           .Columns
+                           .First<ColumnMetaData>((Func<ColumnMetaData, bool>)(c => c.Name == item.JoinedFrom[item.JoinedFrom.Length - 1]));
+
             Type dataType = item.DataType;
             SqlDbType sqlDbType = TypeConverter.ConvertFromObjectType(!dataType.IsEnum ? (!dataType.IsGenericType || !(dataType.GetGenericTypeDefinition() == typeof(Nullable<>)) ? item.DataType : item.DataType.GetGenericArguments()[0]) : Enum.GetUnderlyingType(item.DataType), item.Length, item.IsTimeStamp);
+
+            // special‐case old LOBs
+            if (sqlDbType == SqlDbType.Text)
+                return string.Format("varchar({0})", item.LengthString);
+            if (sqlDbType == SqlDbType.NText)
+                return string.Format("nvarchar({0})", item.LengthString);
+
+            // decimal / varbinary
             if (sqlDbType == SqlDbType.Decimal)
                 return string.Format("decimal({0},{1})", (object)item.Precision, (object)item.Scale);
             if (sqlDbType == SqlDbType.VarBinary)
                 return string.Format("varbinary({0})", item.LengthString);
+
+            //// varchar / nvarchar
+            //if (sqlDbType == SqlDbType.VarChar)
+            //    return string.Format("varchar({0})", item.LengthString);
+            //if (sqlDbType == SqlDbType.NVarChar)
+            //    return string.Format("nvarchar({0})", item.LengthString);
+
+            // everything else (int, datetime, etc.)
             return sqlDbType == SqlDbType.VarChar ? string.Format("varchar({0})", item.LengthString) : sqlDbType.ToString();
         }
 
