@@ -1,10 +1,12 @@
 ﻿using DatabaseLayer.Interfaces;
 using DatabaseLayer.SqlServerProvider.Metadata;
+using DatabaseLayer.SqlServerProvider.Metadata.StoredProcedures.Templates;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 
 namespace DatabaseLayer.Metadata.Differences
@@ -146,12 +148,14 @@ namespace DatabaseLayer.Metadata.Differences
                 }
             }
 
+            var tableName = provider.GetTableName(this.Table.Type);
+            var columnDefinition = this.GetColumnSpec(columnDiff.ModelColumn, provider);
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "dbo.AlterColumnInTable";
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
-                cmd.Parameters.AddWithValue("@ColumnDefinition", this.GetColumnSpec(columnDiff.ModelColumn, provider));
+                cmd.Parameters.AddWithValue("@TableName", tableName);
+                cmd.Parameters.AddWithValue("@ColumnDefinition", columnDefinition);
                 cmd.ExecuteNonQuery();
             }
         }
@@ -199,10 +203,44 @@ namespace DatabaseLayer.Metadata.Differences
             return "CONSTRAINT [" + str + "] FOREIGN KEY ([" + modelColumn.Name + "]) REFERENCES [" + modelColumn.ForeignKeyTable + "]([" + modelColumn.ForeignKeyColumn + "])";
         }
 
+        // TODO: Refactor this method to use a more structured approach for SQL type retrieval.
+        private string GetColumnSqlType(ColumnMetaData column, BaseDataProvider provider)
+        {
+            var tmpl = new RetrieveTemplate();
+            tmpl.Populate(this.Table, provider);
+            return tmpl.GetSqlDataType(column);
+        }
+
         private void ExecuteAddTableQuery(SqlConnection conn, BaseDataProvider provider)
         {
+            if (this.PrimaryKey == null)
+                throw new InvalidOperationException(
+                    $"No primary key defined for table '{provider.GetTableName(this.Table.Type)}'. " +
+                    "Please set PrimaryKey = nameof(YourKeyProperty) in your [TableContract].");
+
             var pkName = this.PrimaryKey.ModelValue;
-            var pkColDef = $"[{pkName}] INT NOT NULL IDENTITY(1,1)";
+            var colMeta = this.Table.PrimaryKeyProperty;
+            var sqlDataType = this.GetColumnSqlType(colMeta, provider);
+
+            bool isIntegral = sqlDataType.Equals("int", StringComparison.OrdinalIgnoreCase)
+                   || sqlDataType.Equals("bigint", StringComparison.OrdinalIgnoreCase)
+                   || sqlDataType.Equals("smallint", StringComparison.OrdinalIgnoreCase)
+                   || sqlDataType.Equals("tinyint", StringComparison.OrdinalIgnoreCase);
+
+            string pkColDef;
+            if (isIntegral)
+            {
+                pkColDef = $"[{pkName}] {sqlDataType} NOT NULL IDENTITY(1,1)";
+            }
+            else if (sqlDataType.Equals("uniqueidentifier", StringComparison.OrdinalIgnoreCase))
+            {
+                pkColDef = $"[{pkName}] uniqueidentifier NOT NULL DEFAULT NEWSEQUENTIALID()";
+            }
+            else
+            {
+                throw new NotSupportedException($"Cannot create identity for primary key of type '{sqlDataType}'.  " +
+                                                 "Supported identity types are INT/SMALLINT/TINYINT/BIGINT or UNIQUEIDENTIFIER.");
+            }
 
             var allCols = new List<string> { pkColDef };
             allCols.AddRange(
@@ -211,7 +249,7 @@ namespace DatabaseLayer.Metadata.Differences
             );
             var colDefs = string.Join(",\r\n", allCols);
             var pkDef = $"CONSTRAINT [PK_{provider.GetTableName(this.Table.Type)}_{this.PrimaryKey.ModelValue}] "
-                       + $"PRIMARY KEY CLUSTERED ([{this.Table.PrimaryKeyProperty.Name}] ASC) "
+                       + $"PRIMARY KEY CLUSTERED ([{colMeta.Name}] ASC) "
                        + this.Table.TableContract.FileGroup switch
                        { var fg => $"WITH(PAD_INDEX=OFF,STATISTICS_NORECOMPUTE=OFF,IGNORE_DUP_KEY=OFF,ALLOW_ROW_LOCKS=ON,ALLOW_PAGE_LOCKS=ON) ON [{fg}]" };
 
