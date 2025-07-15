@@ -7,15 +7,13 @@ using System.Text;
 
 namespace Core.ApplicationModels.KironTestAPI.Tests
 {
-    [TableContract(Audited = true,
-               PartitionOn = nameof(Id),        
-               PrimaryKey = nameof(Id))]      
-    public class TestTable : HasIdOnly, IEquatable<TestTable>
+    [TableContract(Audited = true, PartitionOn = nameof(Id), PrimaryKey = nameof(Id))]      
+    public class TestTable : HasId, IEquatable<TestTable>
     {
         [DataMember, ColumnContract]
         public override long Id { get; set; }
 
-        [ColumnContract(Length = 258, Required = true, Queryable = true)]
+        [ColumnContract(Length = 257, Required = true, Queryable = true)]
         public string UserName { get; set; }
 
         [ColumnContract(Length = 20, DefaultValue = "LIGHT")]
@@ -24,7 +22,7 @@ namespace Core.ApplicationModels.KironTestAPI.Tests
         [ColumnContract]
         public CommunicationMethods TwoFactorType { get; set; }
 
-        [ColumnContract(Length = 256, Required = true, Queryable = true)]
+        [ColumnContract(Length = 255, Required = true, Queryable = true)]
         public string Email { get; set; }
 
         [ColumnContract(DefaultValue = false)]
