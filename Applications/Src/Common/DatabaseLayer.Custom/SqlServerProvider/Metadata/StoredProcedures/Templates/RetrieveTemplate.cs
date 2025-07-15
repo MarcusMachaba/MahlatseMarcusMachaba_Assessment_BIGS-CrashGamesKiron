@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace DatabaseLayer.SqlServerProvider.Metadata.StoredProcedures.Templates
 {
@@ -15,13 +16,25 @@ namespace DatabaseLayer.SqlServerProvider.Metadata.StoredProcedures.Templates
 
         private string ParameterSniffingDeclarations()
         {
-            string str = "\tDECLARE @in" + this.Primary.Name + " INT = @" + this.Primary.Name;
-            foreach (ColumnMetaData columnMetaData in this.Table.QueryableColumns.Except<ColumnMetaData>((IEnumerable<ColumnMetaData>)new ColumnMetaData[1]
+            var sb = new StringBuilder();
+
+            sb.AppendFormat(
+                "\tDECLARE @in{0} {1} = @{0}",
+                this.Primary.Name,
+                this.GetSqlDataType(this.Primary)
+            );
+
+            foreach (var col in this.Table.QueryableColumns.Except(new[] { this.Primary }))
             {
-        this.Primary
-            }))
-                str = str + "," + Environment.NewLine + "\t\t@in" + columnMetaData.Name + " " + this.GetSqlDataType(columnMetaData) + " = @" + columnMetaData.Name;
-            return str;
+                sb.AppendLine(",");
+                sb.AppendFormat(
+                    "\t\t@in{0} {1} = @{0}",
+                    col.Name,
+                    this.GetSqlDataType(col)
+                );
+            }
+
+            return sb.ToString();
         }
 
         private Dictionary<string, RetrieveTemplate.JoinSpec> Joins

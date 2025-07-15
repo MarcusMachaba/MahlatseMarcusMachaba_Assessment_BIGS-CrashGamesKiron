@@ -238,8 +238,7 @@ namespace DatabaseLayer.Metadata.Differences
             }
             else
             {
-                throw new NotSupportedException($"Cannot create identity for primary key of type '{sqlDataType}'.  " +
-                                                 "Supported identity types are INT/SMALLINT/TINYINT/BIGINT or UNIQUEIDENTIFIER.");
+                pkColDef = $"[{pkName}] {sqlDataType} NOT NULL";
             }
 
             var allCols = new List<string> { pkColDef };
