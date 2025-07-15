@@ -1,27 +1,63 @@
 using KironTest.API;
-using KironTest.API.Interfaces;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.ConfigureStaticDependencies();
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var enableSwagger = builder.Configuration.GetValue<bool>("EnableSwagger");
+if (enableSwagger)
+{
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc(builder.Configuration["ApplicationVersion"], new Microsoft.OpenApi.Models.OpenApiInfo
+        {
+            Title = builder.Configuration["ApplicationName"],
+            Version = builder.Configuration["ApplicationVersion"]
+        });
+
+        c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+        {
+            Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+            Name = "Authorization",
+            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+        });
+
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    },
+                    Scheme="oauth2",
+                    Name="Bearer",
+                    In=ParameterLocation.Header
+                },
+                new List<string>()
+            }
+        });
+    });
+}
 
 var app = builder.Build();
 
 //Seed data from outside the dataprovider
 //app.Services.GetRequiredService<IDefaultDataExtension>().SetupDefaultTestData();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() && enableSwagger)
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint($"/swagger/{builder.Configuration["ApplicationVersion"]}/swagger.json", $"{builder.Configuration["ApplicationName"]} {builder.Configuration["ApplicationVersion"]}");
+    });
 }
 
 app.UseHttpsRedirection();
