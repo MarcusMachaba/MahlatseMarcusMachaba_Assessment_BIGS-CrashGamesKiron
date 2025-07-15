@@ -61,7 +61,7 @@ if (app.Environment.IsDevelopment() && enableSwagger)
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
