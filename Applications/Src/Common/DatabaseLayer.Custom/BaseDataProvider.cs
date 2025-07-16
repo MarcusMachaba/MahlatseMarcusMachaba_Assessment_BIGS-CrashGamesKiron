@@ -34,9 +34,6 @@ namespace DatabaseLayer
 
         public virtual List<IStoredProcedure> CustomStoredProcedures => new List<IStoredProcedure>();
 
-        public IDataObjectInterface<BatchNumber> BatchNumbers { get; set; }
-
-        public BaseDataProvider() => this.BatchNumbers = (IDataObjectInterface<BatchNumber>)new SpDataObjectInterface<BatchNumber>(this);
 
         public MetadataStore Metadata
         {
