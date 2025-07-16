@@ -19,7 +19,7 @@ This solution includes:
 
 ## 🛠️ Technologies Used
 
-- ASP.NET Core Web API (.NET 8 )
+- ASP.NET Core Web API (.NET 8 LTS)
 - SQL Server (v14.0+)
 - MemoryCache for local caching
 - JWT Authentication
@@ -89,14 +89,16 @@ The application uses a **code-first convention-based bootstrapping mechanism** (
 2. Set your connection string in `appsettings.json` to point to the restored database.
 3. **Run the application** — all required tables, stored procedures, and initial setup will be created automatically via the custom database layer.
 
-### 🗂️ Path
-**Path:**  
+### 🗂️ Scripts, Procs & DB Backup Path
+```text
+**Path:** 
 /Documentation/ScriptsAndDatabaseBackup/
 ├── SQL-DatabaseBackup/
 ├── SQL-DBLayer-Setup-scripts/
 ├── SQL-Procs/ 
 ├── SQL-table-creation-scripts/
 └── SQL-table-data-scripts/
+```
 
 ---
 
@@ -126,7 +128,7 @@ dotnet run            # builds & runs the DebugTester Console App & runs CRUD us
 
 # --- KironTest.API  ---
 cd ..\..\KironTest.API
-dotnet run            # builds & runs the DebugTester Console App & runs CRUD using the database layer
+dotnet run            # builds & runs the API
 ```
 
 ```bash
@@ -179,10 +181,13 @@ All endpoints (except register/login) require a valid JWT token in request heade
 ---
 
 
-## 🧑‍💻 Submission Info
+## 🧑‍💻 More Info
 
-Submitted by: **Marcus Machaba**  
+Author: **Marcus Machaba**  
 GitHub: [@MarcusMachaba](https://github.com/MarcusMachaba)
-Email: smaka1236@gmail.com  
+Email: smaka1236@gmail.com 
+Date: 16.07.2025
 
----
+
+
+
