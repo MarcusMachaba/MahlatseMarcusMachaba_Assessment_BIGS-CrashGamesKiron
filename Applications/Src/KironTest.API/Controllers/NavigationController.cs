@@ -1,11 +1,12 @@
 ﻿using KironTest.API.ServiceHelpers;
 using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KironTest.API.Controllers
 {
-
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class NavigationController : ControllerBase

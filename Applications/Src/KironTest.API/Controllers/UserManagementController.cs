@@ -17,13 +17,13 @@ namespace KironTest.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterNewUserRequest request)
         {
-            var user = await _authService.RegisterNewUserAsync(request);
-            if (user == null)
+            var response = await _authService.RegisterNewUserAsync(request);
+            if (response.usr == null)
             {
-                return BadRequest("Username already exists.");
+                return BadRequest(response.validationErrors);
             }
 
-            return Ok(new { user.Id, user.UserName });
+            return Ok(new { response.usr.Id, response.usr.UserName });
         }
 
         [HttpPost("login")]

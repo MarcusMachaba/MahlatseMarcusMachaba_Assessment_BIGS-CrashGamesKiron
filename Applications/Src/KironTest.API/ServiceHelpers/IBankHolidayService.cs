@@ -1,5 +1,6 @@
 ﻿using Core.ApplicationModels.KironTestAPI;
 using DatabaseLayer;
+using KironTest.API.Controllers;
 using KironTest.API.DataAccess;
 using System.Data;
 using System.Text.Json;
@@ -18,11 +19,13 @@ namespace KironTest.API.ServiceHelpers
         private readonly IHttpClientFactory _http;
         private readonly DataProvider _dp;
         private readonly SemaphoreSlim _initLock = new(1, 1);
+        private readonly Logger.Logger mLog;
 
         public BankHolidayService(IHttpClientFactory http)
         {
             _http = http;
             _dp = new DataProvider();
+            mLog = Logger.Logger.GetLogger(typeof(WeatherForecastController));
         }
 
         public async Task<string> InitializeAsync()
@@ -33,7 +36,10 @@ namespace KironTest.API.ServiceHelpers
                 // 1) have we already imported?
                 bool done = (await _dp.ExecuteRetrievalProcedureAsync<bool>("spCheckImport", r => r.GetBoolean(0))).FirstOrDefault();
                 if (done)
+                {
+                    mLog.Info($"{nameof(BankHolidayService)} Already initialized—and now managed by background updater.");
                     return "Already initialized—and now managed by background updater.";
+                }
 
                 // 2) fetch JSON
                 var json = await _http
@@ -75,7 +81,7 @@ namespace KironTest.API.ServiceHelpers
                     }
                     catch (Exception ex)
                     {
-                       // TODO: Add logging
+                        mLog.Error($"Error upserting Region or Holiday or RegionHoliday into the db", ex);
                     }
                     
                 }
@@ -86,6 +92,7 @@ namespace KironTest.API.ServiceHelpers
                   new QueryParameter("@Initialized", SqlDbType.Bit, 1)
                 );
 
+                mLog.Info($"{nameof(BankHolidayService)} completed Import and scheduled for background refresh.");
                 return "Import complete and scheduled for background refresh.";
             }
             finally

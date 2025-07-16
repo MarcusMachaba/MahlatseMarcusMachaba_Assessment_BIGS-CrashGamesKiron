@@ -1,7 +1,5 @@
 ﻿using Core.ApplicationModels.KironTestAPI.Tests;
 using KironTest.API.DataAccess;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.VisualBasic;
 
 namespace KironTest.API.Interfaces
 {
@@ -26,7 +24,8 @@ namespace KironTest.API.Interfaces
             {
                 using (var dp = new DataProvider())
                 {
-                    SetupDefaultTestTableData(dp);
+                    //Uncomment this to test database layer data seeding/ initialize data / migration to adddata from outside (Also uncomment the DB models sitting in Core / Tests..)
+                    //SetupDefaultTestTableData(dp);
                 }
             }
             catch (Exception ex)
@@ -37,6 +36,8 @@ namespace KironTest.API.Interfaces
             }
         }
 
+        #region Uncomment this to test database layer data seeding/initialize data/ migration to adddata from outside (Also uncomment the DB models sitting in Core/Tests..)
+        /*
         private void SetupDefaultTestTableData(DataProvider dp)
         {
             int createdCount = 0;
@@ -95,14 +96,7 @@ namespace KironTest.API.Interfaces
             var results = Task.WhenAll(tasks).Result;
             createdCount = results.Sum();
 
-
-
             mLog.Debug($"Created {createdCount} TestTable records.");
-
-
-
-
-
 
             // Now create TestTable2 records with foreign key references to TestTable
 
@@ -153,9 +147,10 @@ namespace KironTest.API.Interfaces
             var resultss = Task.WhenAll(tasksz).Result;
             createdTestTables2Count = resultss.Sum();
 
-
-
             mLog.Debug($"Created {createdTestTables2Count} TestTable2 records.");
         }
+        */
+        #endregion
+
     }
 }
