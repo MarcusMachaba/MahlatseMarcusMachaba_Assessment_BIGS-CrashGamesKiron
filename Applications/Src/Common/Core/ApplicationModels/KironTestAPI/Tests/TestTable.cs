@@ -13,7 +13,7 @@ namespace Core.ApplicationModels.KironTestAPI.Tests
         [DataMember, ColumnContract]
         public override long Id { get; set; }
 
-        [ColumnContract(Length = 257, Required = true, Queryable = true)]
+        [ColumnContract(Length = 255, Required = true, Queryable = true)]
         public string UserName { get; set; }
 
         [ColumnContract(Length = 20, DefaultValue = "LIGHT")]

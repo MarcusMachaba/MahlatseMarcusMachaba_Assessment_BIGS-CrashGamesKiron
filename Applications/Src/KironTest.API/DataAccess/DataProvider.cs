@@ -5,19 +5,25 @@ using DatabaseLayer.Custom.Services;
 using DatabaseLayer.Interfaces;
 using DatabaseLayer.Metadata;
 using DatabaseLayer.SqlServerProvider.DataObjectInterfaces;
-using log4net;
-using System;
-using System.Configuration;
+using KironTest.API.DataAccess.Procs;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace KironTest.API.DataAccess
 {
     public class DataProvider : BaseDataProvider
     {
-
-        public SpDataObjectInterface<TestTable> TestTable { get; set; }
-        public SpDataObjectInterface<TestTable2> TestTable2 { get; set; }
+        // Uncomment to test DatabaseLayer data annotations on model custom CodeFirst
+        //public SpDataObjectInterface<TestTable> TestTable { get; set; }
+        //public SpDataObjectInterface<TestTable2> TestTable2 { get; set; }
         public SpDataObjectInterface<Logs> Logs { get; set; }
+        public SpDataObjectInterface<User> Users { get; set; }
+        public SpDataObjectInterface<Navigation> Navigations { get; set; }
+        public SpDataObjectInterface<Holiday> Holidays { get; set; }
+        public SpDataObjectInterface<Region> Regions { get; set; }
+        public SpDataObjectInterface<RegionHoliday> RegionHolidays { get; set; }
+        public SpDataObjectInterface<BankHolidayImport> BankHolidaysImport { get; set; }
+
         public override string ConnectionString { get; }
         public DataProvider(string connectionString = "")
         {
@@ -25,6 +31,9 @@ namespace KironTest.API.DataAccess
             InitializeDataObjects();
         }
 
+        #region Uncomment to test Database layer custom CodeFirst Initialization
+
+        /*
         public override void ConfigureDefaultData()
         {
             var log = Logger.Logger.GetLogger(typeof(DataProvider));
@@ -49,7 +58,7 @@ namespace KironTest.API.DataAccess
                 {
                     log.Info($"Adding {filteredSeed1.Count} new records to TestTable.");
                     filteredSeed1.ForEach(s => this.TestTable.Create(s));
-                    log.Info($"Added {filteredSeed1.Count} new records to TestTable successfully.");  
+                    log.Info($"Added {filteredSeed1.Count} new records to TestTable successfully.");
                 }
                 else
                     log.Info("No new records to add to TestTable.");
@@ -154,6 +163,17 @@ namespace KironTest.API.DataAccess
             }
         }
 
+        */
+
+        #endregion
+
+        public override void ConfigureDefaultData()
+        {
+            // comment this method out if you uncomment the one above
+        }
+
+       
+
         public override string GetTableName(Type type)
         {
             return $"{type.Name}";
@@ -192,5 +212,47 @@ namespace KironTest.API.DataAccess
                 field.SetValue(this, tableRef);
             });
         }
+
+
+
+        public override List<IStoredProcedure> CustomStoredProcedures
+        {
+            get
+            {
+                var asm = Assembly.GetExecutingAssembly();
+                var sqlStoredProcs = asm.GetManifestResourceNames()
+                    .Where(n => n.StartsWith($"{this.GetType().Namespace}.Procs.") || n.EndsWith(".sql", StringComparison.OrdinalIgnoreCase)).OrderBy(n => Path.GetFileName(n));
+                var splitter = new Regex(@"^\s*GO\s*($|\-\-.*$)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                var procs = new List<IStoredProcedure>();
+                foreach (var sp in sqlStoredProcs)
+                {
+                    string script;
+                    using (var stream = asm.GetManifestResourceStream(sp))
+                    using (var reader = new StreamReader(stream))
+                        script = reader.ReadToEnd();
+
+                    var batches = splitter
+                        .Split(script)
+                        .Select(batch => batch.Trim())
+                        .Where(batch => !string.IsNullOrWhiteSpace(batch));
+
+                    foreach (var batch in batches)
+                    {
+                        if (batch.StartsWith("CREATE PROCEDURE", StringComparison.OrdinalIgnoreCase) || batch.StartsWith("CREATE OR ALTER PROCEDURE", StringComparison.OrdinalIgnoreCase))
+                        {
+                            procs.Add(new BatchStoredProcedure(batch));
+                        }
+                    }
+                }
+                return procs;
+
+                // TODO: refactor the bove to morph into this EmbeddedWrapper
+                //return sqlStoredProcs
+                //    .Select(name => new EmbeddedSqlStoredProcedure(name))
+                //    .Cast<IStoredProcedure>()
+                //    .ToList();
+            }
+        }
     }
+
 }
