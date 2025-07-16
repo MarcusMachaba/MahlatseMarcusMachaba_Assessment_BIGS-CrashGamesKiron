@@ -71,7 +71,11 @@ This solution includes:
 ---
 
 ## 🚀 Quick-start (developer workflow)
-
+### Prerequisites
+- .NET 6 SDK
+- SQL Server 2017+ (version 14.0+)
+- Postman (optional, for API testing) We have swagger integrated on the API
+### Steps
 ```bash
 # Clone + enter
 GITHUB
@@ -82,21 +86,35 @@ AZURE DEVOPS
 git clone https://MarcusMachabasDemos@dev.azure.com/MarcusMachabasDemos/MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron/_git/MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron
 cd MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron
 
+# --- Tests DatabaseLayer---
+cd Applications\Src\Tests\DatabaseLayer.Custom.Tests
+dotnet test            # builds & runs all DatabaseLayer.Custom requirement test-case unit tests
 
+# --- Tests DatabaseLayer CRUD ---
+cd ..\DebugTester
+dotnet run            # builds & runs the DebugTester Console App & runs CRUD using the database layer
+
+# --- KironTest.API  ---
+cd ..\..\KironTest.API
+dotnet run            # builds & runs the DebugTester Console App & runs CRUD using the database layer
 ```
 
-### ? Database Layer
+```bash
+# 💡 Alternative is through visual studio 2022 on solution explorer - Set KiroTest.API as startup project & start/run sln.
+```
+
+## ⚖️ Database Layer
 - Connection pooling with **max 10 active connections**
 - Stored procedures only – **no inline SQL**
 - Transaction support (Begin/Commit/Rollback)
 - Object deserialization from stored procedure result
  
-### ? Caching Layer
+## 🖥 Caching Layer
 - Reusable, thread-safe in-memory cache
 - Sliding expiration support
 - Separate durations per domain (30–60 mins)
 
-### ? API Endpoints
+## 🧪 API Endpoints
 
 | Endpoint | Description |
 |----------|-------------|
@@ -108,11 +126,11 @@ cd MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron
 | `GET /api/bankholidays/{region}` | Bank holidays for the region |
 | `GET /api/dragonball/characters` | Proxies the Dragon Ball API with sliding cache |
 
-All endpoints (except register/login) require a valid JWT token.
+All endpoints (except register/login) require a valid JWT token in request headers.
 
 ---
 
-## ?? Authentication
+## 🖼 Authentication
 
 - Passwords are stored as **one-way salted hashes**
 - JWT token is issued on login (1-hour expiry)
@@ -120,7 +138,7 @@ All endpoints (except register/login) require a valid JWT token.
 
 ---
 
-## ?? Caching Behavior
+## 📬 Caching Behavior
 
 | Domain | Expiry | Strategy |
 |--------|--------|----------|
@@ -130,14 +148,11 @@ All endpoints (except register/login) require a valid JWT token.
 
 ---
 
-## ?? Setup Instructions
 
-### Prerequisites
-- .NET 6 SDK
-- SQL Server 2017+ (version 14.0+)
-- Postman (optional, for API testing)
+## 🧑‍💻 Submission Info
 
-### Steps
-1. **Clone the Repo**
-   ```bash
-   git clone https://dev.azure.com/your-org/your-project/_git/backend-assessment
+Submitted by: **Marcus Machaba**  
+GitHub: [@MarcusMachaba](https://github.com/MarcusMachaba)
+Email: smaka1236@gmail.com  
+
+---
