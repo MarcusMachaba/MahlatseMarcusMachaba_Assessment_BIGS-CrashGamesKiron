@@ -49,7 +49,7 @@ This solution includes:
 - Stored procedures only – **no inline SQL**
 - Transaction support (Begin/Commit/Rollback)
 - Object deserialization from stored procedure result
-
+ 
 ### ? Caching Layer
 - Reusable, thread-safe in-memory cache
 - Sliding expiration support
