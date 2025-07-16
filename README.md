@@ -82,18 +82,7 @@ AZURE DEVOPS
 git clone https://MarcusMachabasDemos@dev.azure.com/MarcusMachabasDemos/MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron/_git/MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron
 cd MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron
 
-# --- Frontend ---
-cd frontend/reactapp_frontend
-npm install            # installs React, Vite, Tailwind, etc.
-npm run dev            # opens http://localhost:5173
 
-# --- Backend ---
-cd ../../backend/Sars.Rpn
-dotnet test            # builds & runs all unit tests
-
-# --- Console demo ---
-cd ../../console/Rpn.Runner
-dotnet run             # interactive RPN REPL
 ```
 
 ### ? Database Layer
