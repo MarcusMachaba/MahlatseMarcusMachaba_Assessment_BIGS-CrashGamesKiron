@@ -3,5 +3,11 @@
   <PropertyGroup>
     <!-- use the highest stable C# the installed SDK supports -->
     <LangVersion>latest</LangVersion>
+
+    <!-- Turn on the latest analyzers/rules that ship with the compiler -->
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <!-- Enable nullable reference types solution-wide -->
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 </Project>

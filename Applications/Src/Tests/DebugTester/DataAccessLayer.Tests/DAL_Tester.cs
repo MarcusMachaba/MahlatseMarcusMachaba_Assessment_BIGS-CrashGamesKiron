@@ -111,6 +111,7 @@ namespace DebugTester.DataAccessLayer.Tests
 
                     dp.CommitTransaction();
                     Console.WriteLine("CRUD operations completed successfully.");
+                    Console.WriteLine("Press any key to exit the console-app cli");
                     Console.ReadLine();
                 }
                 catch (Exception ex)
