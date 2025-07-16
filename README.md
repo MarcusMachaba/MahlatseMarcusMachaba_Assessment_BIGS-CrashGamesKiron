@@ -70,6 +70,36 @@ This solution includes:
 
 ---
 
+## 📄 SQL Scripts & Database Initialization/Seeding
+
+All SQL scripts used for object creation—such as **tables**, **stored procedures**, and other **database objects**—are included in the `Documentation/` folder for reference and transparency.
+
+This includes:
+
+- Table definitions
+- Stored procedure logic
+- Any supporting DB objects
+
+**However, there is no need to run these scripts manually.**  
+The application uses a **code-first convention-based bootstrapping mechanism** (similar to Entity Framework’s `DropCreateDatabaseIfModelChanges`) to automatically set up the database schema on application startup.
+
+### ✅ What You Need to Do
+
+1. Restore the provided `KironTest.bak` database — this contains only the pre-populated `Navigation` table.
+2. Set your connection string in `appsettings.json` to point to the restored database.
+3. **Run the application** — all required tables, stored procedures, and initial setup will be created automatically via the custom database layer.
+
+### 🗂️ Path
+**Path:**  
+/Documentation/ScriptsAndDatabaseBackup/
+├── SQL-DatabaseBackup/
+├── SQL-DBLayer-Setup-scripts/
+├── SQL-Procs/ 
+├── SQL-table-creation-scripts/
+└── SQL-table-data-scripts/
+
+---
+
 ## 🚀 Quick-start (developer workflow)
 ### Prerequisites
 - .NET 6 SDK
