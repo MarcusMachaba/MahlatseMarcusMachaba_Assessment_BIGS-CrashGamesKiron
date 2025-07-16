@@ -4,7 +4,7 @@ This project is a comprehensive backend solution built for Kiron Interactive as 
 
 ---
 
-## ?? Project Overview
+## 🧩 Project Overview
 
 This solution includes:
 <ul class="list-disc pl-4 my-0">
@@ -15,41 +15,86 @@ This solution includes:
 <li class="my-0">🔧 <strong>Developer-Friendly:</strong> Modular architecture with clear separation of concerns, supporting scalable and maintainable codebases.</li>
 </ul>
 
-- A reusable and thread-safe **database access layer** using stored procedures and Dapper
-- A generic **caching layer** with support for sliding expiration
-- A **.NET Web API** exposing secure endpoints backed by JWT authentication
-- Thread-safe integrations with **external APIs** for:
-  - UK Bank Holidays (gov.uk)
-  - Dragon Ball Characters (https://web.dragonball-api.com)
-
 ---
 
-## ??? Technologies Used
+## 🛠️ Technologies Used
 
-- ASP.NET Core Web API (.NET 6+)
-- Dapper ORM
+- ASP.NET Core Web API (.NET 8 )
 - SQL Server (v14.0+)
 - MemoryCache for local caching
 - JWT Authentication
 - Background Services (`IHostedService`)
 - SemaphoreSlim (for thread-safe operations)
-- Swagger (optional)
+- Swagger
+- Ado.Net framework
 
 ---
 
-## ?? Solution Structure
+## 📁 Solution Structure
 
-- `Src/Common/DatabaseLayer.Custom` – 🛠️ SQL scripts for schema creation, stored procedures, and initial data. (CodeFirst no manual running of scripts - it bootstraps itself - you just run the API)
-- `Src/Common/Caching` – 📊 Caching layer (InMemoryCache)
-- `Src/Common/Core` – ⚡ DTOs, Utility method helpers and database models
+- `Src/Common/DatabaseLayer.Custom` – 🛠️ SQL for schema creation, stored procedures, and initial data. (CodeFirst no manual running of scripts - it bootstraps itself - you just run the API).
+- `Src/Common/Caching` – 📊 Caching layer (InMemoryCache).
+- `Src/Common/Core` – ⚡ DTOs, Utility method helpers and database models.
 - `Src/Common/Logger` – 🌐 Centralized, multi-channel logging with log4net for effective monitoring and troubleshooting.
-- `Src/KironTestAPI` – User registration, login, and JWT handling (Modular RESTful API endpoints, navigation, user management, & external data sources integrations like Dragon Ball characters etc.)
+- `Src/KironTestAPI` – 🎯 User registration, login, and JWT handling (Modular RESTful API endpoints, navigation, user management, & external data sources integrations.)
 - `Src/KironTestAPI/Hosting/TimeHostedService` – Automated updater/ background scheduler for bank holidays
-- `README.md` – Project documentation
+- `README.md` – Project documentation4
+
+  
+## 📁  layout
+```text
+├── Documentation/                            # Documentation
+│   ├── KironTest.bak                         # DatabaseBackup
+│   └── README.md                             # Readme doc
+│
+├── Common/                                   # Generic reusable projects
+│   ├── CachingLayer/                         
+│   └── Core/        
+│   └── DatabaseLayer.Custom/
+│   └── Logger/
+│
+├── Tests/
+│   └── DatabaseLayer.Custom.Tests/           # xUnit tests
+│   └── DebugTester/                          # demo ConsoleApp for quick testing of DatabaseLayer.Custom proj
+│
+├── KironTest.API/                            # NET Core API .NET 8
+│   └── Controllers/                          # Contains endpoints
+│       │   ├── DragonBallCharacters/
+│       │   ├── Navigation/
+│       │   └── UKBankHolidays
+│       │   └── UserManagement
+│
+│
+└── Directory.Build.props                     # Analyzer rules for all C# projects & global C# language version
+``` 
 
 ---
 
-## ?? Features
+## 🚀 Quick-start (developer workflow)
+
+```bash
+# Clone + enter
+GITHUB
+git clone https://github.com/MarcusMachaba/MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron.git
+cd MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron
+or
+AZURE DEVOPS
+git clone https://MarcusMachabasDemos@dev.azure.com/MarcusMachabasDemos/MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron/_git/MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron
+cd MahlatseMarcusMachaba_Assessment_BIGS-CrashGamesKiron
+
+# --- Frontend ---
+cd frontend/reactapp_frontend
+npm install            # installs React, Vite, Tailwind, etc.
+npm run dev            # opens http://localhost:5173
+
+# --- Backend ---
+cd ../../backend/Sars.Rpn
+dotnet test            # builds & runs all unit tests
+
+# --- Console demo ---
+cd ../../console/Rpn.Runner
+dotnet run             # interactive RPN REPL
+```
 
 ### ? Database Layer
 - Connection pooling with **max 10 active connections**
