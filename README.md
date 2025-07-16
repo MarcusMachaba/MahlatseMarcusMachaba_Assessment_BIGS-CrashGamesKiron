@@ -1,4 +1,4 @@
-# Senior Backend Developer Assessment � Kiron Interactive
+# Senior Backend Developer Assessment – Kiron Interactive
 
 This project is a comprehensive backend solution built for Kiron Interactive as part of a senior backend developer assessment. It demonstrates scalable architecture, thread-safe service access, secure user authentication, recursive data structuring, and efficient API proxying with intelligent caching strategies.
 
@@ -29,16 +29,26 @@ This solution includes:
 - Swagger (optional)
 
 ---
+## ?? Overview
+<ul class="list-disc pl-4 my-0">
+<li class="my-0">🛠️ <strong>Database Management:</strong> Automated schema validation, index management, and stored procedures for reliable data integrity.</li>
+<li class="my-0">📊 <strong>Logging:</strong> Centralized, multi-channel logging with log4net for effective monitoring and troubleshooting.</li>
+<li class="my-0">⚡ <strong>Caching:</strong> In-memory caching layer to boost data retrieval speed and reduce latency.</li>
+<li class="my-0">🌐 <strong>API Integration:</strong> Modular RESTful API endpoints, navigation, user management, and external data sources integrations like Dragon Ball characters etc.</li>
+<li class="my-0">🔧 <strong>Developer-Friendly:</strong> Modular architecture with clear separation of concerns, supporting scalable and maintainable codebases.</li>
+</ul>
+
+---
 
 ## ?? Solution Structure
 
-- `Database/` � SQL scripts for schema creation, stored procedures, and initial data
-- `Services/` � Caching, API proxying, and DB abstraction logic
-- `Models/` � DTOs and database models
-- `Controllers/` � Web API endpoints
-- `Auth/` � User registration, login, and JWT handling
-- `BackgroundTasks/` � Automated updater for bank holidays
-- `README.md` � Project documentation
+- `Src/Common/DatabaseLayer.Custom` – 🛠️ SQL scripts for schema creation, stored procedures, and initial data. (CodeFirst no manual running of scripts - it bootstraps itself - you just run the API)
+- `Src/Common/Caching` – 📊 Caching layer (InMemoryCache)
+- `Src/Common/Core` – ⚡ DTOs, Utility method helpers and database models
+- `Src/Common/Logger` – 🌐 Centralized, multi-channel logging with log4net for effective monitoring and troubleshooting.
+- `Src/KironTestAPI` – User registration, login, and JWT handling (Modular RESTful API endpoints, navigation, user management, & external data sources integrations like Dragon Ball characters etc.)
+- `Src/KironTestAPI/Hosting/TimeHostedService` – Automated updater/ background scheduler for bank holidays
+- `README.md` – Project documentation
 
 ---
 
@@ -46,14 +56,14 @@ This solution includes:
 
 ### ? Database Layer
 - Connection pooling with **max 10 active connections**
-- Stored procedures only � **no inline SQL**
+- Stored procedures only – **no inline SQL**
 - Transaction support (Begin/Commit/Rollback)
 - Object deserialization from stored procedure result
  
 ### ? Caching Layer
 - Reusable, thread-safe in-memory cache
 - Sliding expiration support
-- Separate durations per domain (30�60 mins)
+- Separate durations per domain (30–60 mins)
 
 ### ? API Endpoints
 
