@@ -5,7 +5,6 @@ VisualStudioVersion = 17.14.36202.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
-		Documentation\KironTest.bak = Documentation\KironTest.bak
 		README.md = README.md
 		Documentation\Senior Backend Developer Assessment.pdf = Documentation\Senior Backend Developer Assessment.pdf
 	EndProjectSection
@@ -36,6 +35,61 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CachingLayer", "Applications\Common\CachingLayer\CachingLayer.csproj", "{C14168B0-7EE8-415B-BA7D-9B2061D0AFA1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KironTest.API", "Applications\Src\KironTest.API\KironTest.API.csproj", "{B8307525-5CFC-4763-8343-B7684D64D4FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScriptsAndDatabaseBackup", "ScriptsAndDatabaseBackup", "{F97A9778-1375-4EF0-8161-B1032ED4FBC6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL-DatabaseBackup", "SQL-DatabaseBackup", "{7CD34B9D-54A2-49E6-8DBE-C5E698708617}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\ScriptsAndDatabase\SQL-DatabaseBackup\KironTest.bak = Documentation\ScriptsAndDatabase\SQL-DatabaseBackup\KironTest.bak
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL-Procs", "SQL-Procs", "{FA58326E-2D52-4FAC-A0FD-13C279DEF81D}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\ScriptsAndDatabase\SQL-Procs\spCheckImport.sql = Documentation\ScriptsAndDatabase\SQL-Procs\spCheckImport.sql
+		Documentation\ScriptsAndDatabase\SQL-Procs\spGetHolidaysByRegion.sql = Documentation\ScriptsAndDatabase\SQL-Procs\spGetHolidaysByRegion.sql
+		Documentation\ScriptsAndDatabase\SQL-Procs\spGetRegions.sql = Documentation\ScriptsAndDatabase\SQL-Procs\spGetRegions.sql
+		Documentation\ScriptsAndDatabase\SQL-Procs\spSetImport.sql = Documentation\ScriptsAndDatabase\SQL-Procs\spSetImport.sql
+		Documentation\ScriptsAndDatabase\SQL-Procs\spUpsertHoliday.sql = Documentation\ScriptsAndDatabase\SQL-Procs\spUpsertHoliday.sql
+		Documentation\ScriptsAndDatabase\SQL-Procs\spUpsertRegion.sql = Documentation\ScriptsAndDatabase\SQL-Procs\spUpsertRegion.sql
+		Documentation\ScriptsAndDatabase\SQL-Procs\spUpsertRegionHoliday.sql = Documentation\ScriptsAndDatabase\SQL-Procs\spUpsertRegionHoliday.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL-table-creation-scripts", "SQL-table-creation-scripts", "{5D4C659C-7343-4B60-8DA5-F754FD19E470}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\BankHolidayImport.sql = Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\BankHolidayImport.sql
+		Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\Holiday.sql = Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\Holiday.sql
+		Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\Navigation.sql = Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\Navigation.sql
+		Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\Region.sql = Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\Region.sql
+		Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\RegionHoliday.sql = Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\RegionHoliday.sql
+		Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\User.sql = Documentation\ScriptsAndDatabase\SQL-table-creation-scripts\User.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL-table-data-scripts", "SQL-table-data-scripts", "{F6AED09F-C963-49C0-B23F-5BE365A9D9E8}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\ScriptsAndDatabase\SQL-table-data-scripts\NavigationData.sql = Documentation\ScriptsAndDatabase\SQL-table-data-scripts\NavigationData.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL-DBLayer-Setup-scripts", "SQL-DBLayer-Setup-scripts", "{8427A46A-7852-49E1-9751-AD9775E5D91F}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\AddColumnsToTable.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\AddColumnsToTable.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\AddForeignKeyToTable.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\AddForeignKeyToTable.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\AlterColumnInTable.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\AlterColumnInTable.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\CheckStoredProcedureExists.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\CheckStoredProcedureExists.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\CreateIndexOnTable.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\CreateIndexOnTable.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\CreateProcedureFromText.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\CreateProcedureFromText.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\CreateTableWithColumns.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\CreateTableWithColumns.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\DropColumnFromTable.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\DropColumnFromTable.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\DropConstraintFromTable.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\DropConstraintFromTable.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\DropIndexOnTable.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\DropIndexOnTable.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\DropProcedureIfExists.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\DropProcedureIfExists.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\ExecuteDynamicSql.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\ExecuteDynamicSql.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetForeignKeyInfo.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetForeignKeyInfo.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetIncludedIndexColumns.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetIncludedIndexColumns.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetIndexColumns.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetIndexColumns.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetIndexInfo.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetIndexInfo.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetTableColumns.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetTableColumns.sql
+		Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetTablePrimaryKeyColumns.sql = Documentation\ScriptsAndDatabase\SQL-DBLayer-Setup-Procs\GetTablePrimaryKeyColumns.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +139,12 @@ Global
 		{22FE1C7C-B145-2396-F69C-28F26D13D49B} = {CDD25D0C-B11E-4D3E-89B4-23EBE81C04AF}
 		{C14168B0-7EE8-415B-BA7D-9B2061D0AFA1} = {1AA9360A-8898-45B4-B365-8432987A3E42}
 		{B8307525-5CFC-4763-8343-B7684D64D4FD} = {92117717-64F5-40FA-B867-0DC0B8A7B287}
+		{F97A9778-1375-4EF0-8161-B1032ED4FBC6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{7CD34B9D-54A2-49E6-8DBE-C5E698708617} = {F97A9778-1375-4EF0-8161-B1032ED4FBC6}
+		{FA58326E-2D52-4FAC-A0FD-13C279DEF81D} = {F97A9778-1375-4EF0-8161-B1032ED4FBC6}
+		{5D4C659C-7343-4B60-8DA5-F754FD19E470} = {F97A9778-1375-4EF0-8161-B1032ED4FBC6}
+		{F6AED09F-C963-49C0-B23F-5BE365A9D9E8} = {F97A9778-1375-4EF0-8161-B1032ED4FBC6}
+		{8427A46A-7852-49E1-9751-AD9775E5D91F} = {F97A9778-1375-4EF0-8161-B1032ED4FBC6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F86174BA-35AC-4607-AB9B-D489EE3F2E68}
