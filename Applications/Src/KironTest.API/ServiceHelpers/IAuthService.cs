@@ -58,6 +58,13 @@ namespace KironTest.API.ServiceHelpers
             {
                 try
                 {
+                    var userValidationErrors = ValidationHelper.ValidateUserRegister(request);
+                    if (!string.IsNullOrEmpty(userValidationErrors.Result))
+                    {
+                        mLog.Warn($"User registration failed due to validation errors: {string.Join(", ", userValidationErrors)}");
+                        return null; // Validation failed
+                    }
+
                     dp.StartTransaction();
                     var existingUser = (await dp.Users.ReadAsync(new { UserName = request.Username })).FirstOrDefault();
                     if (existingUser != null)

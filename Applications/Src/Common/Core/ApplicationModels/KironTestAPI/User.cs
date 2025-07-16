@@ -14,7 +14,6 @@ namespace Core.ApplicationModels.KironTestAPI
         public string EmailAddress { get; set; }
         [ColumnContract(Length = 5000, Required = true)]
         public string PasswordHash { get; set; } = string.Empty;
-        public string Salt { get; set; }
         public bool Equals(User other)
         {
             if (other is null) return false;
