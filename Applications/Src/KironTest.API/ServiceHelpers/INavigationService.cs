@@ -58,7 +58,6 @@ namespace KironTest.API.ServiceHelpers
 
             var roots = new List<NavNode>();
 
-
             foreach (var e in flat)
             {
                 var node = lookup[e.ID];
@@ -75,11 +74,5 @@ namespace KironTest.API.ServiceHelpers
 
             return Task.FromResult(roots);
         }
-    }
-
-    public class NavNode
-    {
-        public string Text { get; set; }
-        public List<NavNode> Children { get; set; } = new();
     }
 }

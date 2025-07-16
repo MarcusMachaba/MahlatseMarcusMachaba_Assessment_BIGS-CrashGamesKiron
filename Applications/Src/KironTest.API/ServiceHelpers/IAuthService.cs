@@ -9,7 +9,7 @@ namespace KironTest.API.ServiceHelpers
     public interface IAuthService
     {
         Task<TokenResponse?> LoginAsync(LoginRequest request);
-        Task<User?> RegisterNewUserAsync(RegisterNewUserRequest request);
+        Task<(User? usr, string validationErrors)> RegisterNewUserAsync(RegisterNewUserRequest request);
     }
     public class AuthService : IAuthService
     {
@@ -52,7 +52,7 @@ namespace KironTest.API.ServiceHelpers
             }
         }
 
-        public async Task<User?> RegisterNewUserAsync(RegisterNewUserRequest request)
+        public async Task<(User? usr, string validationErrors)> RegisterNewUserAsync(RegisterNewUserRequest request)
         {
             using (var dp = new DataProvider())
             {
@@ -62,14 +62,14 @@ namespace KironTest.API.ServiceHelpers
                     if (!string.IsNullOrEmpty(userValidationErrors.Result))
                     {
                         mLog.Warn($"User registration failed due to validation errors: {string.Join(", ", userValidationErrors)}");
-                        return null; // Validation failed
+                        return (null, string.Join(", ", userValidationErrors.Result)); // Validation failed
                     }
 
                     dp.StartTransaction();
                     var existingUser = (await dp.Users.ReadAsync(new { UserName = request.Username })).FirstOrDefault();
                     if (existingUser != null)
                     {
-                        return null; // User already exists
+                        return (null, "User already exists"); // User already exists
                     }
 
                     var newUser = new User
@@ -85,16 +85,16 @@ namespace KironTest.API.ServiceHelpers
                     else
                     {
                         mLog.Warn($"Failed to register new user {request.Username}.");
-                        return null; 
+                        return (null, "Failed to register new user. See logs for more details."); 
                     }
                     dp.CommitTransaction();
-                    return newUser;
+                    return (newUser, string.Empty);
                 }
                 catch (Exception ex)
                 {
                     mLog.Error($"Error registering new user: {ex}");
                     dp.RollbackTransaction();
-                    return null; 
+                    return (null, "Error registering new user. See logs for more details."); 
                 }
             }
         }

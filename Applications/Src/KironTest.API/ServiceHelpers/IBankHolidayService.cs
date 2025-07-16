@@ -25,7 +25,7 @@ namespace KironTest.API.ServiceHelpers
         {
             _http = http;
             _dp = new DataProvider();
-            mLog = Logger.Logger.GetLogger(typeof(WeatherForecastController));
+            mLog = Logger.Logger.GetLogger(typeof(BankHolidayService));
         }
 
         public async Task<string> InitializeAsync()
@@ -98,6 +98,7 @@ namespace KironTest.API.ServiceHelpers
             finally
             {
                 _initLock.Release();
+                _dp.Dispose();
             }
         }
 
