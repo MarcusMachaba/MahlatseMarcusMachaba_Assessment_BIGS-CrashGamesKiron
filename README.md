@@ -7,6 +7,13 @@ This project is a comprehensive backend solution built for Kiron Interactive as 
 ## ?? Project Overview
 
 This solution includes:
+<ul class="list-disc pl-4 my-0">
+<li class="my-0">🛠️ <strong>Database Management:</strong> Automated schema validation, index management, and stored procedures for reliable data integrity.</li>
+<li class="my-0">📊 <strong>Logging:</strong> Centralized, multi-channel logging with log4net for effective monitoring and troubleshooting.</li>
+<li class="my-0">⚡ <strong>Caching:</strong> In-memory caching layer to boost data retrieval speed and reduce latency.</li>
+<li class="my-0">🌐 <strong>API Integration:</strong> Modular RESTful API endpoints, navigation, user management, and external data sources integrations like Dragon Ball characters etc.</li>
+<li class="my-0">🔧 <strong>Developer-Friendly:</strong> Modular architecture with clear separation of concerns, supporting scalable and maintainable codebases.</li>
+</ul>
 
 - A reusable and thread-safe **database access layer** using stored procedures and Dapper
 - A generic **caching layer** with support for sliding expiration
@@ -27,16 +34,6 @@ This solution includes:
 - Background Services (`IHostedService`)
 - SemaphoreSlim (for thread-safe operations)
 - Swagger (optional)
-
----
-## ?? Overview
-<ul class="list-disc pl-4 my-0">
-<li class="my-0">🛠️ <strong>Database Management:</strong> Automated schema validation, index management, and stored procedures for reliable data integrity.</li>
-<li class="my-0">📊 <strong>Logging:</strong> Centralized, multi-channel logging with log4net for effective monitoring and troubleshooting.</li>
-<li class="my-0">⚡ <strong>Caching:</strong> In-memory caching layer to boost data retrieval speed and reduce latency.</li>
-<li class="my-0">🌐 <strong>API Integration:</strong> Modular RESTful API endpoints, navigation, user management, and external data sources integrations like Dragon Ball characters etc.</li>
-<li class="my-0">🔧 <strong>Developer-Friendly:</strong> Modular architecture with clear separation of concerns, supporting scalable and maintainable codebases.</li>
-</ul>
 
 ---
 
