@@ -26,7 +26,7 @@ This solution includes:
 - Background Services (`IHostedService`)
 - SemaphoreSlim (for thread-safe operations)
 - Swagger
-- Ado.Net framework
+- Reflective Ado.net inspired custom generic database layer
 
 ---
 
@@ -34,38 +34,43 @@ This solution includes:
 
 - `Src/Common/DatabaseLayer.Custom` – 🛠️ SQL for schema creation, stored procedures, and initial data. (CodeFirst no manual running of scripts - it bootstraps itself - you just run the API).
 - `Src/Common/Caching` – 📊 Caching layer (InMemoryCache).
-- `Src/Common/Core` – ⚡ DTOs, Utility method helpers and database models.
-- `Src/Common/Logger` – 🌐 Centralized, multi-channel logging with log4net for effective monitoring and troubleshooting.
-- `Src/KironTestAPI` – 🎯 User registration, login, and JWT handling (Modular RESTful API endpoints, navigation, user management, & external data sources integrations.)
-- `Src/KironTestAPI/Hosting/TimeHostedService` – Automated updater/ background scheduler for bank holidays
-- `README.md` – Project documentation4
+- `Src/Common/Core` – ⚡ DTOs, utility method helpers and database models.
+- `Src/Common/Logger` – 🌐 Centralized, multi-channel logging with custom log4net for effective monitoring and troubleshooting.
+- `Src/KironTestAPI` – 🎯 User registration, login, and JWT handling (modular RESTful API endpoints, navigation, user management & external data source integrations).
+- `Src/KironTestAPI/Hosting/TimeHostedService` – Automated updater/background scheduler for UK bank holidays
+- `Documentation/README.md` – Project documentation
 
   
 ## 📁  layout
 ```text
-├── Documentation/                            # Documentation
-│   ├── KironTest.bak                         # DatabaseBackup
-│   └── README.md                             # Readme doc
+├── Documentation/                                # Documentation
+│    └── ScriptsAndDatabaseBackup                 # SQL scripts, stored-procs & database-backup
+│          ├── SQL-DatabaseBackup
+│          └── SQL-DBLayer-Setup-scripts
+│          └── SQL-Procs
+│          └── SQL-table-creation-scripts
+│          └── SQL-table-data-scripts
+│          └── README.md                          # Readme doc                           
 │
-├── Common/                                   # Generic reusable projects
-│   ├── CachingLayer/                         
-│   └── Core/        
-│   └── DatabaseLayer.Custom/
-│   └── Logger/
+├── Src/Common/                                   # Generic reusable projects
+│     ├── CachingLayer/                         
+│     └── Core/        
+│     └── DatabaseLayer.Custom/
+│     └── Logger/
 │
-├── Tests/
-│   └── DatabaseLayer.Custom.Tests/           # xUnit tests
-│   └── DebugTester/                          # demo ConsoleApp for quick testing of DatabaseLayer.Custom proj
+├── Src/Tests/
+│     └── DatabaseLayer.Custom.Tests/             # xUnit tests
+│     └── DebugTester/                            # demo ConsoleApp for quick testing of DatabaseLayer.Custom proj
 │
-├── KironTest.API/                            # NET Core API .NET 8
-│   └── Controllers/                          # Contains endpoints
-│       │   ├── DragonBallCharacters/
-│       │   ├── Navigation/
-│       │   └── UKBankHolidays
-│       │   └── UserManagement
+├── Src/KironTest.API/                            # NET Core API .NET 8
+│     └── Controllers/                            # Contains endpoints
+│          └── DragonBallCharacters/
+│          ├── Navigation/
+│          ├── UKBankHolidays
+│          └── UserManagement
 │
 │
-└── Directory.Build.props                     # Analyzer rules for all C# projects & global C# language version
+└── Directory.Build.props                         # Analyzer rules for all C# projects & global C# language version
 ``` 
 
 ---
@@ -81,7 +86,7 @@ This includes:
 - Any supporting DB objects
 
 **However, there is no need to run these scripts manually.**  
-The application uses a **code-first convention-based bootstrapping mechanism** (similar to Entity Framework’s `DropCreateDatabaseIfModelChanges`) to automatically set up the database schema on application startup.
+The application uses a **code-first convention-based bootstrapping mechanism** (similar to Entity Framework’s `DropCreateDatabaseIfModelChanges`) to automatically set up the database schema on application startup you just need to ensure a database named KiraTest exists with 1 table named Navigation that contains data. Dont modify the API's connectionString thats in the appsettings.json.
 
 ### ✅ What You Need to Do
 
@@ -150,13 +155,13 @@ dotnet run            # builds & runs the API
 
 | Endpoint | Description |
 |----------|-------------|
-| `POST /api/auth/register` | Register a new user (hashed password) |
-| `POST /api/auth/login` | Authenticate and return JWT |
-| `GET /api/navigation` | Recursive navigation tree from DB |
-| `GET /api/bankholidays/start` | Starts background updater for UK Bank Holidays |
-| `GET /api/bankholidays/regions` | Returns all UK regions |
-| `GET /api/bankholidays/{region}` | Bank holidays for the region |
-| `GET /api/dragonball/characters` | Proxies the Dragon Ball API with sliding cache |
+| `POST /api/UserManagement/register` | Register a new user (hashed password) |
+| `POST /api/UserManagement/login` | Authenticate and return JWT |
+| `GET /api/Navigation/navigation` | Recursive navigation tree from DB |
+| `GET /api/UKBankHolidays/initialize` | Starts background updater for UK Bank Holidays |
+| `GET /api/UKBankHolidays/regions` | Returns all UK regions |
+| `GET /api/UKBankHolidays/regions/{regionId}/holidays` | Bank holidays for the region |
+| `GET /api/DragonBallCharacters/characters` | Proxies the Dragon Ball API with sliding cache |
 
 All endpoints (except register/login) require a valid JWT token in request headers.
 
