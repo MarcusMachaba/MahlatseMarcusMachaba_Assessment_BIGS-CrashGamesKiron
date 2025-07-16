@@ -13,5 +13,6 @@ namespace DatabaseLayer.Attributes
         public bool Audited { get; set; }
 
         public string PrimaryKey { get; set; }
+        public bool Identity { get; set; } = true;
     }
 }

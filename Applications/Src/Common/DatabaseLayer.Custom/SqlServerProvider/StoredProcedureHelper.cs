@@ -37,13 +37,27 @@ namespace DatabaseLayer.SqlServerProvider
 
         private static bool StoredProcedureExists(SqlConnection conn, string storedProcedureName)
         {
+            string objectName;
+            if (storedProcedureName.StartsWith("dbo.", StringComparison.OrdinalIgnoreCase))
+            {
+                // already has a schema, strip it off
+                var parts = storedProcedureName.Split(new[] { '.' }, 2);
+                objectName = $"[dbo].[{parts[1]}]";
+            }
+            else
+            {
+                // no schema, prefix with dbo
+                objectName = $"[dbo].[{storedProcedureName}]";
+            }
+
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "dbo.CheckStoredProcedureExists";
                 cmd.CommandType = CommandType.StoredProcedure;
                 // pass the same “[dbo].[ProcName]” string we were building inline
-                cmd.Parameters.AddWithValue("@ObjectName", (object)("[dbo].[" + storedProcedureName + "]"));
-                return cmd.ExecuteScalar() is int num && num > 0;
+                cmd.Parameters.AddWithValue("@ObjectName", (object)objectName);
+                var res = cmd.ExecuteScalar() is int num && num > 0;
+                return res;
             }
         }
 
@@ -51,13 +65,8 @@ namespace DatabaseLayer.SqlServerProvider
 
         private static string SkeletanValue(string value) => value.Replace(Environment.NewLine, "").Replace(" ", "");
 
-        internal static void Deploy(
-          SqlConnection conn,
-          IStoredProcedure storedProcedure,
-          DeploySettings settings,
-          BaseDataProvider baseDataProvider)
+        internal static void Deploy(SqlConnection conn, IStoredProcedure storedProcedure, DeploySettings settings, BaseDataProvider baseDataProvider)
         {
-
             if (StoredProcedureHelper.StoredProcedureExists(conn, storedProcedure.StoredProcedureName))
             {
                 // 1) drop

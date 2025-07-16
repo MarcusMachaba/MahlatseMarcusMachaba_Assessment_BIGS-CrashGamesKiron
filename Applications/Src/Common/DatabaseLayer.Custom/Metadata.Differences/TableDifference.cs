@@ -228,9 +228,14 @@ namespace DatabaseLayer.Metadata.Differences
                    || sqlDataType.Equals("tinyint", StringComparison.OrdinalIgnoreCase);
 
             string pkColDef;
-            if (isIntegral)
+            var includeIdentity = this.Table.TableContract.Identity;
+            if (isIntegral && includeIdentity)
             {
                 pkColDef = $"[{pkName}] {sqlDataType} NOT NULL IDENTITY(1,1)";
+            }
+            else if (isIntegral && !includeIdentity)
+            {
+                pkColDef = $"[{pkName}] {sqlDataType} NOT NULL";
             }
             else if (sqlDataType.Equals("uniqueidentifier", StringComparison.OrdinalIgnoreCase))
             {
@@ -247,18 +252,22 @@ namespace DatabaseLayer.Metadata.Differences
                     .Select(c => this.GetColumnSpec(c, provider))
             );
             var colDefs = string.Join(",\r\n", allCols);
+            var compositDef = $"CONSTRAINT [PK_{provider.GetTableName(this.Table.Type)}] "
+                            + $"PRIMARY KEY CLUSTERED ([{colMeta.Name}] ASC, [{colMeta.Table.Columns.FirstOrDefault().ForeignKeyColumn}] ASC) "
+                            + this.Table.TableContract.FileGroup switch
+                            { var fg => $"WITH(PAD_INDEX=OFF,STATISTICS_NORECOMPUTE=OFF,IGNORE_DUP_KEY=OFF,ALLOW_ROW_LOCKS=ON,ALLOW_PAGE_LOCKS=ON) ON [{fg}]" };
             var pkDef = $"CONSTRAINT [PK_{provider.GetTableName(this.Table.Type)}_{this.PrimaryKey.ModelValue}] "
                        + $"PRIMARY KEY CLUSTERED ([{colMeta.Name}] ASC) "
                        + this.Table.TableContract.FileGroup switch
                        { var fg => $"WITH(PAD_INDEX=OFF,STATISTICS_NORECOMPUTE=OFF,IGNORE_DUP_KEY=OFF,ALLOW_ROW_LOCKS=ON,ALLOW_PAGE_LOCKS=ON) ON [{fg}]" };
-
+            var primaryKeyDefinition = includeIdentity ? pkDef : compositDef;
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "dbo.CreateTableWithColumns";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@TableName", provider.GetTableName(this.Table.Type));
                 cmd.Parameters.AddWithValue("@ColumnDefinitions", colDefs);
-                cmd.Parameters.AddWithValue("@PrimaryKeyDefinition", pkDef);
+                cmd.Parameters.AddWithValue("@PrimaryKeyDefinition", primaryKeyDefinition);
                 cmd.Parameters.AddWithValue("@FileGroup", this.Table.TableContract.FileGroup);
                 cmd.ExecuteNonQuery();
             }
