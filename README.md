@@ -1,4 +1,4 @@
-# Senior Backend Developer Assessment – Kiron Interactive
+# 🧑‍💻 Senior Backend Developer Assessment – Kiron Interactive
 
 This project is a comprehensive backend solution built for Kiron Interactive as part of a senior backend developer assessment. It demonstrates scalable architecture, thread-safe service access, secure user authentication, recursive data structuring, and efficient API proxying with intelligent caching strategies.
 
