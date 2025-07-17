@@ -289,7 +289,7 @@ This project was built to fulfill all requirements outlined in the **Senior Back
 2. Configure the connection string in `appsettings.json`:
    ```json
    "ConnectionStrings": {
-     "DefaultConnection": "Data Source=.;Initial Catalog=KironTest;Integrated Security=true"
+     "DefaultConnection": "Data Source=.;Initial Catalog=KironTest;Integrated Security=true;TrustServerCertificate=true"
    }
    ```
 3. Run the application:
