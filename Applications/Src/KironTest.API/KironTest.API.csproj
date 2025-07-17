@@ -28,4 +28,11 @@
     <ProjectReference Include="..\Common\DatabaseLayer.Custom\DatabaseLayer.Custom.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- suppress missing XML comment warnings -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+
 </Project>

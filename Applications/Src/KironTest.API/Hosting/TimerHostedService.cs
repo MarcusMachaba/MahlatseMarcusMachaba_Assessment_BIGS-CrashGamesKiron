@@ -1,4 +1,6 @@
-﻿namespace KironTest.API.Hosting
+﻿using KironTest.API.ServiceHelpers;
+
+namespace KironTest.API.Hosting
 {
     /// <summary>
     /// Runs a user-supplied async callback on a regular interval.
@@ -9,6 +11,7 @@
         private readonly TimeSpan _dueTime;
         private readonly TimeSpan _period;
         private Timer? _timer;
+        private readonly Logger.Logger mLog;
 
         /// <summary>
         /// </summary>
@@ -26,6 +29,7 @@
             _callback = callback ?? throw new ArgumentNullException(nameof(callback));
             _dueTime = dueTime;
             _period = period;
+            mLog = Logger.Logger.GetLogger(typeof(AuthService));
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -37,9 +41,9 @@
                     {
                         await _callback(state);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // TODO: add logging here
+                        mLog.Error($"Error during scheduled background execution: {ex}");
                     }
                 },
                 state: null,

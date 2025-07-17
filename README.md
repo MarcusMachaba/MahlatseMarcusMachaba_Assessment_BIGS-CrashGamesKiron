@@ -179,9 +179,9 @@ All endpoints (except register/login) require a valid JWT token in request heade
 ---
 
 
-## 🧑‍💻 Submission Info
+## 🧑‍💻 More Info
 
-Submitted by: **Marcus Machaba**  
+Author: **Marcus Machaba**  
 GitHub: [@MarcusMachaba](https://github.com/MarcusMachaba)
 Email: smaka1236@gmail.com  
 

@@ -14,7 +14,7 @@ namespace KironTest.API
 {
     public static class KironApiStartupExtension
     {
-        public static WebApplicationBuilder ConfigureStaticDependencies(this WebApplicationBuilder builder)//or callItSetupAll()  // call it this way from Program.cs AuthenticationServiceSetup.SetupAll(services, mvcBuilder, Config, GetIdentityModel);
+        public static WebApplicationBuilder ConfigureStaticDependencies(this WebApplicationBuilder builder)
         {
             LoggingDependencies.SetLog4NetDatabaseConnectionString(builder.Configuration.GetConnectionString("DefaultConnection"));
             DALConfiguration.Config = builder.Configuration;
@@ -23,9 +23,9 @@ namespace KironTest.API
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("TokenAuthentication"));
             InjectAndResolveInterfaces(builder);
             ConfigureJWTAuthentication(builder);
-            // schedule daily refresh at midnight [On app start: fire InitializeAsync() once (dueTime = 0 or TimeSpan.Zero param).]
+            // schedule daily refresh at midnight [On app start: fire InitializeAsync() once delayStart (dueTime = 5minutes or TimeSpan.FromMinutes(5) param).]
             builder.Services.AddHostedService(sp =>
-              new TimerHostedService(async _ => await sp.GetRequiredService<IBankHolidayService>().InitializeAsync(), TimeSpan.Zero, TimeSpan.FromHours(24))
+              new TimerHostedService(async _ => await sp.GetRequiredService<IBankHolidayService>().InitializeAsync(), dueTime: TimeSpan.FromMinutes(5), period: TimeSpan.FromHours(24))
             );
 
             return builder;
@@ -33,9 +33,7 @@ namespace KironTest.API
 
         private static void ConfigureJWTAuthentication(WebApplicationBuilder builder)
         {
-            // Setup JWT Authentication
             var jwtSettings = builder.Configuration.GetSection("TokenAuthentication");
-            //var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
             var base64Key = jwtSettings["SecretKey"]!;
             var keyBytes = Convert.FromBase64String(base64Key);
             builder.Services.AddAuthentication(options =>

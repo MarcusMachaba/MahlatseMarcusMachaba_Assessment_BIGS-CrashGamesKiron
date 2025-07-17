@@ -23,7 +23,8 @@ if (enableSwagger)
             Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
             Name = "Authorization",
             In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-            Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
         });
 
         c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -43,6 +44,10 @@ if (enableSwagger)
                 new List<string>()
             }
         });
+
+        var xmlFile = "KironTest.API.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        c.IncludeXmlComments(xmlPath);
     });
 }
 
@@ -51,7 +56,7 @@ var app = builder.Build();
 //Seed data from outside the dataprovider
 //app.Services.GetRequiredService<IDefaultDataExtension>().SetupDefaultTestData();
 
-if (app.Environment.IsDevelopment() && enableSwagger)
+if (app.Environment.IsDevelopment() || enableSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>

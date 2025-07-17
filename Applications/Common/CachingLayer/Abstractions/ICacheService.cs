@@ -26,6 +26,8 @@ namespace CachingLayer.Abstractions
         /// Remove an entry from cache.
         /// </summary>
         void Remove(string key);
+
+        bool TryGetValue<T>(string key, out T value);
     }
 
 }

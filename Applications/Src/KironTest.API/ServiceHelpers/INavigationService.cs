@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using CachingLayer.Abstractions;
 using Core.ApplicationModels.KironTestAPI;
 using KironTest.API.DataAccess;
 using log4net;
@@ -15,46 +16,62 @@ namespace KironTest.API.ServiceHelpers
     public class NavigationService : INavigationService
     {
         private readonly Logger.Logger mLog;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cacheService;
         private const string CacheKey = "NavigationHierarchy";
+        private static readonly SemaphoreSlim _lock = new(1, 1);
 
-        public NavigationService(IMemoryCache cache)
+        public NavigationService(ICacheService cache)
         {
             mLog = Logger.Logger.GetLogger(typeof(AuthService));
-            _cache = cache;
+            _cacheService = cache;
         }
 
         public async Task<List<Navigation>> GetAllyAsync()
         {
-            if (_cache.TryGetValue(CacheKey, out List<Navigation> cached))
+            if (_cacheService.TryGetValue(CacheKey, out List<Navigation> cached))
             {
                 return cached;
             }
-            using (var dp = new DataProvider())
+
+            await _lock.WaitAsync();
+            try
             {
-                try
+                if (_cacheService.TryGetValue(CacheKey, out cached))
                 {
-                    var allItems = (await dp.Navigations.ReadAsync(new {  })).OrderBy(n => n.ParentID).ToList();
-                    
-                    _cache.Set(CacheKey, allItems, TimeSpan.FromMinutes(30));
-                    return allItems;
+                    return cached;
                 }
-                catch (Exception ex)
+                
+                using (var dp = new DataProvider())
                 {
-                    mLog.Error($"Error retrieving Navigation-Hierarchy: {ex}");
-                    return new List<Navigation>();
+                    try
+                    {
+                        var allItems = (await dp.Navigations.ReadAsync(new { })).OrderBy(n => n.ParentID).ToList();
+
+                        _cacheService.Set(CacheKey, allItems, TimeSpan.FromMinutes(30));
+                        return allItems;
+                    }
+                    catch (Exception ex)
+                    {
+                        mLog.Error($"Error retrieving Navigation-Hierarchy: {ex}");
+                        return new List<Navigation>();
+                    }
                 }
+            }
+            finally
+            {
+                _lock.Release();
             }
         }
 
         public Task<List<NavNode>> GetTreeAsync(List<Navigation> flat)
         {
             var lookup = flat
-            .Select(e => new {
-                e.ID,
-                Node = new NavNode { Text = e.Text }
-            })
-            .ToDictionary(x => x.ID, x => x.Node);
+                .Select(e => new
+                {
+                    e.ID,
+                    Node = new NavNode { Text = e.Text }
+                })
+                .ToDictionary(x => x.ID, x => x.Node);
 
             var roots = new List<NavNode>();
 
@@ -62,7 +79,7 @@ namespace KironTest.API.ServiceHelpers
             {
                 var node = lookup[e.ID];
 
-                if (e.ParentID <= 0)      
+                if (e.ParentID <= 0)
                 {
                     roots.Add(node);
                 }

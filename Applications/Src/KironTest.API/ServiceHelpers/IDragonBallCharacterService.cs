@@ -1,4 +1,5 @@
-﻿using Core.ApplicationModels.KironTestAPI;
+﻿using CachingLayer.Abstractions;
+using Core.ApplicationModels.KironTestAPI;
 using KironTest.API.Controllers;
 using log4net;
 using Microsoft.Extensions.Caching.Memory;
@@ -14,28 +15,25 @@ namespace KironTest.API.ServiceHelpers
     public class DragonBallCharacterService : IDragonBallCharacterService
     {
         private readonly IHttpClientFactory _http;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cacheService;
         private static readonly SemaphoreSlim _lock = new(1, 1);
         private const string CacheKey = "DragonBallCharacters";
         private readonly TimeSpan SlidingExpiration = TimeSpan.FromHours(1);
         private readonly Logger.Logger mLog;
 
-        public DragonBallCharacterService(IHttpClientFactory http, IMemoryCache cache)
+        public DragonBallCharacterService(IHttpClientFactory http, ICacheService cache)
         {
             _http = http;
-            _cache = cache;
+            _cacheService = cache;
             mLog = Logger.Logger.GetLogger(typeof(DragonBallCharacterService));
         }
 
         public async Task<List<DragonBallCharacter>> GetCharactersAsync()
         {
-            if (_cache.TryGetValue(CacheKey, out List<DragonBallCharacter> characters))
+            if (_cacheService.TryGetValue(CacheKey, out List<DragonBallCharacter> characters))
             {
                 // Accessed, extend sliding expiration
-                _cache.Set(CacheKey, characters, new MemoryCacheEntryOptions
-                {
-                    SlidingExpiration = SlidingExpiration
-                });
+                _cacheService.Set(CacheKey, characters, SlidingExpiration);
                 return characters;
             }
 
@@ -43,8 +41,9 @@ namespace KironTest.API.ServiceHelpers
             try
             {
                 // Double-check after acquiring lock
-                if (_cache.TryGetValue(CacheKey, out characters))
+                if (_cacheService.TryGetValue(CacheKey, out characters))
                 {
+                    _cacheService.Set(CacheKey, characters, SlidingExpiration);
                     return characters;
                 }
 
@@ -65,11 +64,7 @@ namespace KironTest.API.ServiceHelpers
                     mLog.Error($"Error fetching data externally", ex); ;
                 }
                 
-
-                _cache.Set(CacheKey, characters, new MemoryCacheEntryOptions
-                {
-                    SlidingExpiration = SlidingExpiration
-                });
+                _cacheService.Set(CacheKey, characters, SlidingExpiration);
 
                 return characters;
             }
